@@ -1,10 +1,32 @@
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import Calendario from "../components/calendario";
+import useDatePickerAppointment from "../hooks/useDatePickerAppointment";
 
 export default function App() {
+  const {
+    date: selectedDate,
+    show: showDatePicker,
+    openPicker,
+    handleChange,
+    getMinimumDate,
+  } = useDatePickerAppointment()
+
+
+
+
   return (
-    <ScrollView contentContainerStyle={styles.containerScrollView}>
     <View style={styles.container}>
-      <Text style={styles.text}>Fecha</Text>
+        <View style={styles.fecha}>
+          <Calendario
+            label="Elegir fecha"
+            value={selectedDate}
+            onChange={handleChange}
+            show={showDatePicker}
+            onPress={openPicker}
+            minimumDate={getMinimumDate()}
+          />
+        </View>
+      
 
       <Text style={styles.text}>IC</Text>
       <TextInput
@@ -25,14 +47,14 @@ export default function App() {
       <Text style={styles.text}>Medio de Pago</Text>
 
     </View>
-    </ScrollView>
+
+
+
+    
   );
 }
 
 const styles = StyleSheet.create({
-  containerScrollView:{
-        flex: 1,
-  },
   container: {
     flex: 1,
     backgroundColor: "#000",
@@ -51,4 +73,9 @@ const styles = StyleSheet.create({
     padding: 10,
     color: 'white',
   },
+  fecha: {
+    width: '100%',
+    height: 100,
+    padding: 4
+  }
 });
