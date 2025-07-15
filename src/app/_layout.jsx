@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native'
 
-const _layout = () => {
+const RootNavigation = () => {
   return (
     <View>
       <Text>bbbbbbb</Text>
@@ -8,4 +8,4 @@ const _layout = () => {
   )
 }
 
-export default _layout
+export default RootNavigation
