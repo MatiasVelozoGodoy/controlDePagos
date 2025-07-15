@@ -1,11 +1,14 @@
-import { Text, View } from 'react-native'
+import { Stack } from 'expo-router'
+import { Text } from 'react-native'
 
 const RootNavigation = () => {
   return (
-    <View>
-      <Text>bbbbbbb</Text>
-    </View>
+    <Stack>
+      <Text>kjkjkj</Text>
+    </Stack>
   )
 }
+
+
 
 export default RootNavigation
