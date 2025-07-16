@@ -1,5 +1,6 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StatusBar, StyleSheet, Text, TextInput, View } from "react-native";
 import Calendario from "../components/calendario";
+import DropdownComponent from "../components/dropdown";
 import useDatePickerAppointment from "../hooks/useDatePickerAppointment";
 
 export default function App() {
@@ -16,6 +17,9 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+          <StatusBar
+          backgroundColor="#a1dafb"
+        />
         <View style={styles.fecha}>
           <Calendario
             label="Elegir fecha"
@@ -39,12 +43,15 @@ export default function App() {
       <Text style={styles.text}>Monto</Text>
       <TextInput
       style={styles.input}
-      placeholder="IC"
+      placeholder="Monto"
       placeholderTextColor="#fffa"
       keyboardType="numeric"
       />
 
       <Text style={styles.text}>Medio de Pago</Text>
+      <View style={styles.dropdown}>
+        <DropdownComponent/>
+      </View>
       <View>
         <Text style={styles.text}>Total</Text>
       </View>
@@ -69,7 +76,7 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   input: {
-    width: '80%',
+    width: '75%',
     borderWidth: 1,
     borderColor: 'white',
     borderRadius: 6,
@@ -77,8 +84,11 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   fecha: {
-    width: '70%',
+    width: '75%',
     height: 100,
     padding: 4
+  },
+  dropdown:{
+    width: '75%'
   }
 });

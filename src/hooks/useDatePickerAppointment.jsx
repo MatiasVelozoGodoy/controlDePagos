@@ -29,6 +29,7 @@ const useDatePickerAppointment = (initialDate = null) => {
   }
 
   const handleChange = (event, selectedDate) => {
+    
     setShow(false)
     if (selectedDate) {
       setDate(selectedDate)

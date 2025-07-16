@@ -1,6 +1,6 @@
 
 import DateTimePicker from "@react-native-community/datetimepicker"
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 
 const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, show, onPress, minimumDate }) => {
   const formatDate = (date) => {
@@ -40,7 +40,7 @@ const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, s
         <DateTimePicker
           value={value || new Date()}
           mode="date"
-          display={"default"}
+          display={Platform.OS === "windows" ? "spinner" : "default"}
           onChange={onChange}
           minimumDate={minimumDate}
           locale="es-ES"
