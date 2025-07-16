@@ -18,7 +18,7 @@ export default function App() {
   return (
     <View style={styles.container}>
           <StatusBar
-          backgroundColor="#a1dafb"
+          backgroundColor="black"
         />
         <View style={styles.fecha}>
           <Calendario
