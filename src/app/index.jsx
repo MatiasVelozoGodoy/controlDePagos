@@ -45,6 +45,9 @@ export default function App() {
       />
 
       <Text style={styles.text}>Medio de Pago</Text>
+      <View>
+        <Text style={styles.text}>Total</Text>
+      </View>
 
     </View>
 
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   fecha: {
-    width: '100%',
+    width: '70%',
     height: 100,
     padding: 4
   }

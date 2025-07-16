@@ -5,10 +5,10 @@ import { useState } from "react"
 const useDatePickerAppointment = (initialDate = null) => {
   const getInitialDate = () => {
     if (initialDate) return initialDate
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    tomorrow.setHours(0, 0, 0, 0)
-    return tomorrow
+    const today = new Date()
+    today.setDate(today.getDate())
+    today.setHours(0, 0, 0, 0)
+    return today
   }
 
   const [date, setDate] = useState(getInitialDate)
@@ -36,9 +36,9 @@ const useDatePickerAppointment = (initialDate = null) => {
   }
 
   const getMinimumDate = () => {
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    return tomorrow
+    const todayminimun = new Date()
+    todayminimun.setDate(todayminimun.getDate())
+    return todayminimun
   }
 
   const setDateDirectly = (newDate) => {

@@ -1,8 +1,8 @@
 
 import DateTimePicker from "@react-native-community/datetimepicker"
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 
-const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, show, onPress, minimumDate, style }) => {
+const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, show, onPress, minimumDate }) => {
   const formatDate = (date) => {
     if (!date) return "Seleccionar fecha"
 
@@ -26,7 +26,7 @@ const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, s
   }
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={styles.container}>
       <TouchableOpacity activeOpacity={0.7} style={styles.dateButton} onPress={onPress}>
         <View style={styles.dateButtonContent}>
           <View style={styles.dateInfo}>
@@ -40,7 +40,7 @@ const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, s
         <DateTimePicker
           value={value || new Date()}
           mode="date"
-          display={Platform.OS === "ios" ? "spinner" : "default"}
+          display={"default"}
           onChange={onChange}
           minimumDate={minimumDate}
           locale="es-ES"
@@ -55,11 +55,12 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   dateButton: {
-    backgroundColor: "#f8f9fa",
-    borderRadius: 2,
-    borderWidth: 2,
+    backgroundColor: "#000",
+    borderRadius: 20,
+    borderWidth: 1,
     borderColor: "#e9ecef",
-    padding: 5,
+    padding: 10,
+    marginTop: 19,
   },
   dateButtonContent: {
     flexDirection: "row",
@@ -68,17 +69,18 @@ const styles = StyleSheet.create({
   },
   dateInfo: {
     flex: 1,
+    color: 'white',
   },
   label: {
     fontSize:14,
-    color: 'black',
+    color: 'white',
     marginBottom: 5,
     fontWeight: "500",
     textAlign: "center"
   },
   dateText: {
     fontSize: 14,
-    color: 'black',
+    color: 'white',
     fontWeight: "bold",
     textAlign: "center"
   },
