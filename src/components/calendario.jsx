@@ -53,14 +53,14 @@ const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, s
 const styles = StyleSheet.create({
   container: {
     marginVertical: 4,
+    flex: 1
   },
   dateButton: {
-    backgroundColor: "#000",
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "#e9ecef",
     padding: 10,
-    marginTop: 19,
+    marginTop: 47,
   },
   dateButtonContent: {
     flexDirection: "row",
