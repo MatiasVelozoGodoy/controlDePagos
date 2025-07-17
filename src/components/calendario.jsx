@@ -40,7 +40,7 @@ const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, s
         <DateTimePicker
           value={value || new Date()}
           mode="date"
-          display={Platform.OS === "windows" ? "spinner" : "default"}
+          display={Platform.OS === "android" ? "spinner" : "default"}
           onChange={onChange}
           minimumDate={minimumDate}
           locale="es-ES"

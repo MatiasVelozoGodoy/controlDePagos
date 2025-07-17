@@ -18,13 +18,15 @@ import { Dropdown } from 'react-native-element-dropdown';
 
     return (
         <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'red' }]}
+          style={[styles.dropdown, isFocus && { borderColor: '#fffa', borderWidth: 1.6 }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
+          itemTextStyle={{color : '#fffa'}}
           data={data}
           labelField="label"
+          containerStyle={{backgroundColor: 'black', borderRadius: 4}}          
           valueField="value"
           placeholder={!isFocus ? 'Seleccionar' : 'Seleccionar'}
           searchPlaceholder="Buscar..."
