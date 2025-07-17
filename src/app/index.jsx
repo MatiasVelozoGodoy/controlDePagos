@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from "react-native"
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 import Calendario from "../components/calendario"
 import Dropdown from "../components/dropdown"
 import useDatePickerAppointment from "../hooks/useDatePickerAppointment"
@@ -13,6 +13,8 @@ export default function App() {
     getMinimumDate,
   } = useDatePickerAppointment()
 
+    const [count, setCount] = useState(0);
+  const onPress = () => setCount(prevCount => prevCount + 1);
   const [ic, setIc] = useState("")
   const [monto, setMonto] = useState("")
   const [montoNum, setMontoNum] = useState(0)
@@ -47,7 +49,7 @@ export default function App() {
 
     const cleanEntero = Number.parseInt(entero) || 0
     const cleanDecimal = decimal ? Number.parseInt(decimal.padEnd(2, "0").slice(0, 2)) : 0
-    const cleanNumber = cleanEntero + cleanDecimal / 100
+    const cleanNumber = cleanEntero + cleanDecimal / 75
 
     const resultado = Number.parseFloat((cleanNumber * 0.2541).toFixed(2))
 
@@ -71,9 +73,9 @@ export default function App() {
   }
 
   return (
-    <ScrollView contentContainerStyle={{    width: '100%',
-    height: '100%',}}>
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+     <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
+    <View style={styles.innerContainer}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
 
       <View style={styles.fecha}>
@@ -117,20 +119,33 @@ export default function App() {
         <Text style={styles.text}>Total</Text>
         <Text style={styles.textMonto}>${formatVisual(montoNum)}</Text>
       </View>
+        <TouchableOpacity style={styles.button} 
+        onPress={onPress} 
+        activeOpacity={0.7}>
+          <Text style={styles.textMonto}>Guardar</Text>
+        </TouchableOpacity>
+    
     </View>
+    
     </ScrollView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+   container: {
     flex: 1,
     backgroundColor: "#000",
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  innerContainer: {
     alignItems: "center",
-    paddingTop: 20,
+    paddingHorizontal: 16,
   },
   text: {
-    color: "#fffa",
+    color: "#fff",
     fontSize: 30,
     padding: 30,
     textAlign: "center",
@@ -140,7 +155,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "auto",
     paddingLeft: 15,
-    marginTop: 10,
+    marginTop: 1,
   },
   input: {
     width: "75%",
@@ -158,7 +173,6 @@ const styles = StyleSheet.create({
     height: "10%",
     padding: 4,
     marginTop: 15,
-    marginBottom: 10,
   },
   dropdown: {
     width: "75%",
@@ -166,10 +180,22 @@ const styles = StyleSheet.create({
   },
   totalContainer: {
     alignItems: "flex-start",
-    marginTop: 20,
+    marginTop: 10,
     padding: 2,
     borderTopWidth: 1,
     borderTopColor: "#333",
     width: "100%",
+  },
+    button: {
+      marginTop: 25,
+      width: '75%',
+    alignItems: 'center',
+    textAlign: "center",
+    backgroundColor: '#000',
+    padding: 10,
+    color: 'white',
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 6
   },
 })
