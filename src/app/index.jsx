@@ -1,3 +1,4 @@
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -29,7 +30,8 @@ export default function App() {
   const [monto, setMonto] = useState("");
   const [montoNum, setMontoNum] = useState(0);
   const [medioPago, setMedioPago] = useState({ label: "", value: "" });
-  const [objetivoPuesto, setObjetivoPuesto] = useState(true)
+  const [objetivoPuesto, setObjetivoPuesto] = useState(true);
+  const [isDisable, setIsDisable] = useState(false);
 
   const formatMonto = (val) => {
     if (!val || val.trim() === "") {
@@ -89,7 +91,7 @@ export default function App() {
     setIc(cleaned);
   };
 
-    const formatObjetivo = (val) => {
+  const formatObjetivo = (val) => {
     const cleaned = val.replace(/[^0-9]/g, "");
     setObjetivo(cleaned);
   };
@@ -127,9 +129,8 @@ export default function App() {
           <Text style={styles.text}>Objetivo</Text>
 
           <TextInput
-            style={styles.input}
-            placeholder="Objetivo"
-            
+            style={!isDisable ? styles.input : styles.inputDisable}
+            placeholder={!isDisable ? "Objetivo" : objetivo}
             editable={objetivoPuesto}
             placeholderTextColor="#fffa"
             keyboardType="numeric"
@@ -137,10 +138,18 @@ export default function App() {
             onChangeText={formatObjetivo}
             maxLength={10}
           />
-
+          <TouchableOpacity style={styles.iconButton}
+          onPress={() => setIsDisable(false)}
+          activeOpacity={0.7}>
+          <AntDesign
+          style={styles.icon}
+          name="edit"
+          size={20}
+        />
+          </TouchableOpacity>
           <Text style={styles.text}>Monto</Text>
           <TextInput
-            style={styles.input}            
+            style={styles.input}
             placeholder="0,00"
             placeholderTextColor="#fffa"
             keyboardType="numeric"
@@ -158,36 +167,42 @@ export default function App() {
             <Text style={styles.textMonto}>${formatVisual(montoNum)}</Text>
           </View>
           <View style={styles.botonesContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              if (monto === "" || objetivo === "" || ic === "" || medioPago.value === "") {
-                console.log("No guardarrrr");
-                Alert.alert("Faltan cosas", "Rellena todos los campos", [
-                  { text: "Aceptar" },
-                ]);
-              } else {
-                setObjetivoPuesto(false)
-                console.log("Datos a guardar:", montoNum);
-                console.log("IC:", ic);
-                console.log("Fecha:", selectedDate);
-                console.log("Medio de pago:", medioPago.label);
-                Alert.alert("Exito", "Guardado con exito", [
-                  { text: "Aceptar" },
-                ]);
-              }
-            }}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.textMonto}>Guardar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => router.push("/guardados")}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.textMonto}>Historial</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                if (
+                  monto === "" ||
+                  objetivo === "" ||
+                  ic === "" ||
+                  medioPago.value === ""
+                ) {
+                  console.log("No guardarrrr");
+                  Alert.alert("Faltan cosas", "Rellena todos los campos", [
+                    { text: "Aceptar" },
+                  ]);
+                } else {
+                  setObjetivoPuesto(false);
+                  setIsDisable(true);
+                  console.log("Datos a guardar:", montoNum);
+                  console.log("IC:", ic);
+                  console.log("Fecha:", selectedDate);
+                  console.log("Medio de pago:", medioPago.label);
+                  Alert.alert("Exito", "Guardado con exito", [
+                    { text: "Aceptar" },
+                  ]);
+                }
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.textMonto}>Guardar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("/guardados")}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.textMonto}>Historial</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -230,8 +245,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
   },
-  inputDisable:{
-    
+  inputDisable: {
+    borderColor: "black",
+    color: "#fffa",
+    flexDirection: "row",
   },
   fecha: {
     justifyContent: "center",
@@ -264,11 +281,23 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 6,
   },
-  botonesContainer:{
+  botonesContainer: {
     width: "75%",
     alignItems: "center",
     textAlign: "center",
     justifyContent: "center",
-    marginBottom: 50
-  }
+    marginBottom: 50,
+  },
+  iconButton:{
+    borderRadius: 6,
+    width: 30,
+    height: 30,
+    borderWidth: 1,
+    borderColor: 'white',
+    justifyContent: "center",
+    alignItems: "center",
+  },
+    icon: {
+    color: 'white',
+  },
 });
