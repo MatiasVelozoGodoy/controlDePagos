@@ -1,12 +1,32 @@
+import DateTimePicker from "@react-native-community/datetimepicker";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-import DateTimePicker from "@react-native-community/datetimepicker"
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-
-const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, show, onPress, minimumDate }) => {
+const DatePickerAppointment = ({
+  label = "Seleccionar fecha",
+  value,
+  onChange,
+  show,
+  onPress,
+  minimumDate,
+}) => {
   const formatDate = (date) => {
-    if (!date) return "Seleccionar fecha"
+    if (!date) return "Seleccionar fecha";
 
-    const days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+    const days = [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+    ];
     const months = [
       "Enero",
       "Febrero",
@@ -20,18 +40,26 @@ const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, s
       "Octubre",
       "Noviembre",
       "Diciembre",
-    ]
+    ];
 
-    return `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} ${date.getFullYear()}`
-  }
+    return `${days[date.getDay()]}, ${date.getDate()} de ${
+      months[date.getMonth()]
+    } ${date.getFullYear()}`;
+  };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity activeOpacity={0.7} style={styles.dateButton} onPress={onPress}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={styles.dateButton}
+        onPress={onPress}
+      >
         <View style={styles.dateButtonContent}>
           <View style={styles.dateInfo}>
             <Text style={styles.label}>{label}</Text>
-            <Text style={styles.dateText}>{value ? formatDate(value) : "Seleccionar fecha"}</Text>
+            <Text style={styles.dateText}>
+              {value ? formatDate(value) : "Seleccionar fecha"}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -48,8 +76,8 @@ const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, s
         />
       )}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -69,21 +97,21 @@ const styles = StyleSheet.create({
   },
   dateInfo: {
     flex: 1,
-    color: 'white',
+    color: "white",
   },
   label: {
-    fontSize:14,
-    color: 'white',
+    fontSize: 14,
+    color: "white",
     marginBottom: 5,
     fontWeight: "500",
-    textAlign: "center"
+    textAlign: "center",
   },
   dateText: {
     fontSize: 14,
-    color: 'white',
+    color: "white",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
-})
+});
 
-export default DatePickerAppointment
+export default DatePickerAppointment;

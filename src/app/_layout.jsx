@@ -1,13 +1,12 @@
-import { Stack } from 'expo-router'
+import { Stack } from "expo-router";
 
 const RootNavigation = () => {
   return (
     <Stack>
-      <Stack.Screen name='index' options={{ headerShown: false}}/>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="guardados" options={{ headerShown: false }} />
     </Stack>
-  )
-}
+  );
+};
 
-
-
-export default RootNavigation
+export default RootNavigation;
