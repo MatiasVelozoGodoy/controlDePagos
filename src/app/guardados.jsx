@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const guardados = () => {
   return (
@@ -7,7 +7,11 @@ const guardados = () => {
         style={{ flex: 1 }}
         contentContainerStyle={styles.scrollContent}
       >
-        <View style={styles.innerContainer}></View>
+        <View style={styles.innerContainer}>
+          <Text style={{color: 'white'}}>
+            Hola
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
