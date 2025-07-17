@@ -25,9 +25,11 @@ export default function App() {
   } = useDatePickerAppointment();
   const router = useRouter();
   const [ic, setIc] = useState("");
+  const [objetivo, setObjetivo] = useState("");
   const [monto, setMonto] = useState("");
   const [montoNum, setMontoNum] = useState(0);
   const [medioPago, setMedioPago] = useState({ label: "", value: "" });
+  const [objetivoPuesto, setObjetivoPuesto] = useState(true)
 
   const formatMonto = (val) => {
     if (!val || val.trim() === "") {
@@ -87,6 +89,11 @@ export default function App() {
     setIc(cleaned);
   };
 
+    const formatObjetivo = (val) => {
+    const cleaned = val.replace(/[^0-9]/g, "");
+    setObjetivo(cleaned);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -117,10 +124,23 @@ export default function App() {
             onChangeText={formatIC}
             maxLength={10}
           />
+          <Text style={styles.text}>Objetivo</Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Objetivo"
+            
+            editable={objetivoPuesto}
+            placeholderTextColor="#fffa"
+            keyboardType="numeric"
+            value={objetivo}
+            onChangeText={formatObjetivo}
+            maxLength={10}
+          />
 
           <Text style={styles.text}>Monto</Text>
           <TextInput
-            style={styles.input}
+            style={styles.input}            
             placeholder="0,00"
             placeholderTextColor="#fffa"
             keyboardType="numeric"
@@ -137,15 +157,17 @@ export default function App() {
             <Text style={styles.text}>Total</Text>
             <Text style={styles.textMonto}>${formatVisual(montoNum)}</Text>
           </View>
+          <View style={styles.botonesContainer}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              if (monto === "" || ic === "" || medioPago.value === "") {
+              if (monto === "" || objetivo === "" || ic === "" || medioPago.value === "") {
                 console.log("No guardarrrr");
                 Alert.alert("Faltan cosas", "Rellena todos los campos", [
                   { text: "Aceptar" },
                 ]);
               } else {
+                setObjetivoPuesto(false)
                 console.log("Datos a guardar:", montoNum);
                 console.log("IC:", ic);
                 console.log("Fecha:", selectedDate);
@@ -162,9 +184,11 @@ export default function App() {
           <TouchableOpacity
             style={styles.button}
             onPress={() => router.push("/guardados")}
+            activeOpacity={0.7}
           >
             <Text style={styles.textMonto}>Historial</Text>
           </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -206,6 +230,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
   },
+  inputDisable:{
+    
+  },
   fecha: {
     justifyContent: "center",
     width: "75%",
@@ -237,4 +264,11 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 6,
   },
+  botonesContainer:{
+    width: "75%",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    marginBottom: 50
+  }
 });
