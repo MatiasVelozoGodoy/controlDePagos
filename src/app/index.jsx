@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -26,6 +27,7 @@ export default function App() {
   const [ic, setIc] = useState("");
   const [monto, setMonto] = useState("");
   const [montoNum, setMontoNum] = useState(0);
+  const [medioPago, setMedioPago] = useState({ label: "", value: "" });
 
   const formatMonto = (val) => {
     if (!val || val.trim() === "") {
@@ -128,7 +130,7 @@ export default function App() {
 
           <Text style={styles.text}>Medio de Pago</Text>
           <View style={styles.dropdown}>
-            <Dropdown />
+            <Dropdown value={medioPago} setValue={setMedioPago} />
           </View>
 
           <View style={styles.totalContainer}>
@@ -137,10 +139,31 @@ export default function App() {
           </View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.push("/guardados")}
+            onPress={() => {
+              if (monto === "" || ic === "" || medioPago.value === "") {
+                console.log("No guardarrrr");
+                Alert.alert("Faltan cosas", "Rellena todos los campos", [
+                  { text: "Aceptar" },
+                ]);
+              } else {
+                console.log("Datos a guardar:", montoNum);
+                console.log("IC:", ic);
+                console.log("Fecha:", selectedDate);
+                console.log("Medio de pago:", medioPago.label);
+                Alert.alert("Exito", "Guardado con exito", [
+                  { text: "Aceptar" },
+                ]);
+              }
+            }}
             activeOpacity={0.7}
           >
             <Text style={styles.textMonto}>Guardar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/guardados")}
+          >
+            <Text style={styles.textMonto}>Historial</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

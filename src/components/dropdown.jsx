@@ -11,8 +11,7 @@ const data = [
   { label: "100% Honorarios", value: "5" },
 ];
 
-const DropdownComponent = () => {
-  const [value, setValue] = useState(null);
+const DropdownComponent = ({ value, setValue }) => {
   const [isFocus, setIsFocus] = useState(false);
 
   return (
@@ -33,12 +32,12 @@ const DropdownComponent = () => {
       valueField="value"
       placeholder={!isFocus ? "Seleccionar" : "Seleccionar"}
       searchPlaceholder="Buscar..."
-      value={value}
+      value={value?.value}
       activeColor="#333"
       onFocus={() => setIsFocus(true)}
       onBlur={() => setIsFocus(false)}
       onChange={(item) => {
-        setValue(item.value);
+        setValue(item);
         setIsFocus(false);
       }}
       renderLeftIcon={() => (
