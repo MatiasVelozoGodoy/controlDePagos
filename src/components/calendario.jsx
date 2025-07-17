@@ -44,6 +44,7 @@ const DatePickerAppointment = ({ label = "Seleccionar fecha", value, onChange, s
           onChange={onChange}
           minimumDate={minimumDate}
           locale="es-ES"
+          themeVariant="dark"
         />
       )}
     </View>
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   dateButton: {
-    borderRadius: 20,
+    borderRadius: 6,
     borderWidth: 1,
     borderColor: "#eaefe9ff",
     justifyContent: "center",

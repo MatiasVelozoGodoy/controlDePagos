@@ -8,7 +8,7 @@ import { Dropdown } from 'react-native-element-dropdown';
     { label: 'Pago Fácil', value: '2' },
     { label: 'Efectivo', value: '3' },
     { label: 'Tarj. Crédito', value: '4' },
-    { label: '100% Honorarios', value: '4' }
+    { label: '100% Honorarios', value: '5' }
   ];
 
   const DropdownComponent = () => {
@@ -21,16 +21,18 @@ import { Dropdown } from 'react-native-element-dropdown';
           style={[styles.dropdown, isFocus && { borderColor: '#fffa', borderWidth: 1.6 }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
+          itemContainerStyle={{color: 'red'}}
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
           itemTextStyle={{color : '#fffa'}}
           data={data}
           labelField="label"
-          containerStyle={{backgroundColor: 'black', borderRadius: 4}}          
+          containerStyle={{backgroundColor: 'black', borderRadius: 6}}
           valueField="value"
           placeholder={!isFocus ? 'Seleccionar' : 'Seleccionar'}
           searchPlaceholder="Buscar..."
           value={value}
+          activeColor='#333'
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           onChange={item => {
@@ -56,7 +58,7 @@ import { Dropdown } from 'react-native-element-dropdown';
       height: 50,
       borderColor: 'white',
       borderWidth: 0.5,
-      borderRadius: 8,
+      borderRadius: 6,
       paddingHorizontal: 8,
     },
     icon: {
