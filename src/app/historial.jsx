@@ -1,6 +1,7 @@
 import {
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,6 +16,7 @@ const historial = () => {
         contentContainerStyle={styles.scrollContent}
       >
         <View style={styles.innerContainer}>
+          <StatusBar barStyle="light-content" backgroundColor="#000" />
           <TouchableOpacity style={styles.buttons} activeOpacity={0.7}>
             <Text style={styles.text}>Julio 2024</Text>
           </TouchableOpacity>

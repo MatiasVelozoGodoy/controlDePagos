@@ -27,6 +27,7 @@ export default function App() {
   const router = useRouter();
   const [ic, setIc] = useState("");
   const [objetivo, setObjetivo] = useState("");
+  const [objetivoNum, setObjetivoNum] = useState(0);
   const [monto, setMonto] = useState("");
   const [montoNum, setMontoNum] = useState(0);
   const [medioPago, setMedioPago] = useState({ label: "", value: "" });
@@ -43,9 +44,7 @@ export default function App() {
     val = val.replace(/[^0-9,]/g, "");
 
     const comaCount = (val.match(/,/g) || []).length;
-    if (comaCount > 1) {
-      return;
-    }
+    if (comaCount > 1) return;
 
     const [entero, decimal] = val.split(",");
 
@@ -56,7 +55,6 @@ export default function App() {
     }
 
     const formattedEntero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
     const formattedDecimal = decimal?.slice(0, 2) ?? "";
 
     const visual =
@@ -76,6 +74,44 @@ export default function App() {
     setMontoNum(isNaN(resultado) ? 0 : resultado);
   };
 
+  const formatObjetivo = (val) => {
+    if (!val || val.trim() === "") {
+      setObjetivo("");
+      setObjetivoNum(0);
+      return;
+    }
+
+    val = val.replace(/[^0-9,]/g, "");
+
+    const comaCount = (val.match(/,/g) || []).length;
+    if (comaCount > 1) return;
+
+    const [entero, decimal] = val.split(",");
+
+    if (!entero) {
+      setObjetivo("");
+      setObjetivoNum(0);
+      return;
+    }
+
+    const formattedEntero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    const formattedDecimal = decimal?.slice(0, 2) ?? "";
+
+    const visual =
+      decimal !== undefined
+        ? `${formattedEntero},${formattedDecimal}`
+        : formattedEntero;
+
+    const cleanEntero = Number.parseInt(entero) || 0;
+    const cleanDecimal = decimal
+      ? Number.parseInt(decimal.padEnd(2, "0").slice(0, 2))
+      : 0;
+    const cleanNumber = cleanEntero + cleanDecimal / 100;
+
+    setObjetivo(visual);
+    setObjetivoNum(isNaN(cleanNumber) ? 0 : cleanNumber);
+  };
+
   const formatVisual = (num) => {
     if (isNaN(num) || num === 0) return "0,00";
 
@@ -91,17 +127,9 @@ export default function App() {
     setIc(cleaned);
   };
 
-  const formatObjetivo = (val) => {
-    const cleaned = val.replace(/[^0-9]/g, "");
-    setObjetivo(cleaned);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
         <View style={styles.innerContainer}>
           <StatusBar barStyle="light-content" backgroundColor="#000" />
 
@@ -126,6 +154,7 @@ export default function App() {
             onChangeText={formatIC}
             maxLength={10}
           />
+
           <Text style={styles.text}>Objetivo</Text>
           <View style={styles.objetivoConteiner}>
             <TextInput
@@ -136,19 +165,19 @@ export default function App() {
               keyboardType="numeric"
               value={objetivo}
               onChangeText={formatObjetivo}
-              maxLength={10}
+              maxLength={15}
             />
             <View style={styles.botonEditarConteiner}>
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => {
-                setIsDisable(false);
-                setObjetivoPuesto(true);
-              }}
-              activeOpacity={0.7}
-            >
-              <AntDesign style={styles.icon} name="edit" size={20} />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={() => {
+                  setIsDisable(false);
+                  setObjetivoPuesto(true);
+                }}
+                activeOpacity={0.7}
+              >
+                <AntDesign style={styles.icon} name="edit" size={20} />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -171,6 +200,7 @@ export default function App() {
             <Text style={styles.text}>Total</Text>
             <Text style={styles.textMonto}>${formatVisual(montoNum)}</Text>
           </View>
+
           <View style={styles.botonesContainer}>
             <TouchableOpacity
               style={styles.button}
@@ -181,10 +211,7 @@ export default function App() {
                   ic === "" ||
                   medioPago.value === ""
                 ) {
-                  console.log("No guardarrrr");
-                  Alert.alert("Faltan cosas", "Rellena todos los campos", [
-                    { text: "Aceptar" },
-                  ]);
+                  Alert.alert("Faltan cosas", "Rellena todos los campos", [{ text: "Aceptar" }]);
                 } else {
                   setObjetivoPuesto(false);
                   setIsDisable(true);
@@ -192,14 +219,12 @@ export default function App() {
                   console.log("IC:", ic);
                   console.log("Fecha:", selectedDate);
                   console.log("Medio de pago:", medioPago.label);
-                  Alert.alert("Exito", "Guardado con exito", [
-                    { text: "Aceptar" },
-                    
-                  ])
-                  if(isDisable){
-                    setObjetivo((objetivo - montoNum).toString())
-                    
-                  };
+                  Alert.alert("Éxito", "Guardado con éxito", [{ text: "Aceptar" }]);
+                  if (isDisable) {
+                    const nuevo = objetivoNum - montoNum;
+                    setObjetivo(formatVisual(nuevo));
+                    setObjetivoNum(nuevo);
+                  }
                 }
               }}
               activeOpacity={0.7}
@@ -310,10 +335,8 @@ const styles = StyleSheet.create({
   icon: {
     color: "white",
   },
-  objetivoConteiner:{
+  objetivoConteiner: {
     flexDirection: "row",
   },
-  botonEditarConteiner:{
-
-  }
+  botonEditarConteiner: {},
 });
