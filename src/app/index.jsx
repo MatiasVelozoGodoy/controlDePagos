@@ -127,26 +127,31 @@ export default function App() {
             maxLength={10}
           />
           <Text style={styles.text}>Objetivo</Text>
+          <View style={styles.objetivoConteiner}>
+            <TextInput
+              style={!isDisable ? styles.input : styles.inputDisable}
+              placeholder={!isDisable ? "Objetivo" : objetivo}
+              editable={objetivoPuesto}
+              placeholderTextColor="#fffa"
+              keyboardType="numeric"
+              value={objetivo}
+              onChangeText={formatObjetivo}
+              maxLength={10}
+            />
+            <View style={styles.botonEditarConteiner}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => {
+                setIsDisable(false);
+                setObjetivoPuesto(true);
+              }}
+              activeOpacity={0.7}
+            >
+              <AntDesign style={styles.icon} name="edit" size={20} />
+            </TouchableOpacity>
+            </View>
+          </View>
 
-          <TextInput
-            style={!isDisable ? styles.input : styles.inputDisable}
-            placeholder={!isDisable ? "Objetivo" : objetivo}
-            editable={objetivoPuesto}
-            placeholderTextColor="#fffa"
-            keyboardType="numeric"
-            value={objetivo}
-            onChangeText={formatObjetivo}
-            maxLength={10}
-          />
-          <TouchableOpacity style={styles.iconButton}
-          onPress={() => setIsDisable(false)}
-          activeOpacity={0.7}>
-          <AntDesign
-          style={styles.icon}
-          name="edit"
-          size={20}
-        />
-          </TouchableOpacity>
           <Text style={styles.text}>Monto</Text>
           <TextInput
             style={styles.input}
@@ -189,7 +194,12 @@ export default function App() {
                   console.log("Medio de pago:", medioPago.label);
                   Alert.alert("Exito", "Guardado con exito", [
                     { text: "Aceptar" },
-                  ]);
+                    
+                  ])
+                  if(isDisable){
+                    setObjetivo((objetivo - montoNum).toString())
+                    
+                  };
                 }
               }}
               activeOpacity={0.7}
@@ -198,7 +208,7 @@ export default function App() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => router.push("/guardados")}
+              onPress={() => router.push("/historial")}
               activeOpacity={0.7}
             >
               <Text style={styles.textMonto}>Historial</Text>
@@ -288,16 +298,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 50,
   },
-  iconButton:{
+  iconButton: {
     borderRadius: 6,
     width: 30,
     height: 30,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: "white",
     justifyContent: "center",
     alignItems: "center",
   },
-    icon: {
-    color: 'white',
+  icon: {
+    color: "white",
   },
+  objetivoConteiner:{
+    flexDirection: "row",
+  },
+  botonEditarConteiner:{
+
+  }
 });

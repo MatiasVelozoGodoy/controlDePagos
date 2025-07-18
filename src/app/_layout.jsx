@@ -4,7 +4,7 @@ const RootNavigation = () => {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="guardados" options={{ headerShown: false }} />
+      <Stack.Screen name="historial" options={{ headerShown: false }} />
     </Stack>
   );
 };
