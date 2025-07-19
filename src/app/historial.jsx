@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   buttons: {
-    marginTop: 15,
+    marginTop: 35,
     width: "75%",
     borderWidth: 1,
     borderColor: "white",

@@ -158,7 +158,7 @@ export default function App() {
           <Text style={styles.text}>Objetivo</Text>
           <View style={styles.objetivoConteiner}>
             <TextInput
-              style={!isDisable ? styles.input : styles.inputDisable}
+              style={!isDisable ? styles.inputObjetivo : styles.inputDisable}
               placeholder={!isDisable ? "Objetivo" : objetivo}
               editable={objetivoPuesto}
               placeholderTextColor="#fffa"
@@ -176,7 +176,9 @@ export default function App() {
                 }}
                 activeOpacity={0.7}
               >
-                <AntDesign style={styles.icon} name="edit" size={20} />
+                <AntDesign style={styles.icon} 
+                  name={isDisable ? "edit" : "save"} 
+                    size={20} />
               </TouchableOpacity>
             </View>
           </View>
@@ -271,6 +273,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   input: {
+    justifyContent:  "center",
     width: "75%",
     borderWidth: 1,
     borderColor: "white",
@@ -279,6 +282,17 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     textAlign: "center",
+  },
+  inputObjetivo: {
+    width: "75%",
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 6,
+    padding: 15,
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    marginLeft: 51
   },
   inputDisable: {
     borderColor: "black",
@@ -289,7 +303,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "75%",
     height: "10%",
-    padding: 4,
     marginTop: 15,
   },
   dropdown: {
@@ -338,5 +351,9 @@ const styles = StyleSheet.create({
   objetivoConteiner: {
     flexDirection: "row",
   },
-  botonEditarConteiner: {},
+  botonEditarConteiner: {
+    justifyContent: "center",
+    paddingLeft: 20
+    
+  },
 });
