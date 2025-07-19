@@ -183,6 +183,15 @@ export default function App() {
                   style={styles.icon}
                   name={isDisable ? "edit" : "save"}
                   size={20}
+                  onPress={() => {
+                    if (isDisable) {
+                      setObjetivoPuesto(true);
+                      setIsDisable(false);
+                    } else {
+                      setObjetivoPuesto(false);
+                      setIsDisable(true);
+                    }
+                  }}
                 />
               </TouchableOpacity>
             </View>
@@ -222,8 +231,6 @@ export default function App() {
                     { text: "Aceptar" },
                   ]);
                 } else {
-                  setObjetivoPuesto(false);
-                  setIsDisable(true);
                   console.log("Datos a guardar:", montoNum);
                   console.log("IC:", ic);
                   console.log("Fecha:", selectedDate);
@@ -304,9 +311,12 @@ const styles = StyleSheet.create({
     marginLeft: 51,
   },
   inputDisable: {
-    borderColor: "black",
-    color: "#fffa",
-    flexDirection: "row",
+    borderRadius: 6,
+    padding: 15,
+    color: "#f00a",
+    fontSize: 18,
+    textAlign: "center",
+    marginLeft: 51,
   },
   fecha: {
     justifyContent: "center",
@@ -362,6 +372,6 @@ const styles = StyleSheet.create({
   },
   botonEditarConteiner: {
     justifyContent: "center",
-    paddingLeft: 20,
+    paddingLeft: 10,
   },
 });
