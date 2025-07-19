@@ -129,7 +129,10 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.scrollContent}
+      >
         <View style={styles.innerContainer}>
           <StatusBar barStyle="light-content" backgroundColor="#000" />
 
@@ -176,9 +179,11 @@ export default function App() {
                 }}
                 activeOpacity={0.7}
               >
-                <AntDesign style={styles.icon} 
-                  name={isDisable ? "edit" : "save"} 
-                    size={20} />
+                <AntDesign
+                  style={styles.icon}
+                  name={isDisable ? "edit" : "save"}
+                  size={20}
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -213,7 +218,9 @@ export default function App() {
                   ic === "" ||
                   medioPago.value === ""
                 ) {
-                  Alert.alert("Faltan cosas", "Rellena todos los campos", [{ text: "Aceptar" }]);
+                  Alert.alert("Faltan cosas", "Rellena todos los campos", [
+                    { text: "Aceptar" },
+                  ]);
                 } else {
                   setObjetivoPuesto(false);
                   setIsDisable(true);
@@ -221,7 +228,9 @@ export default function App() {
                   console.log("IC:", ic);
                   console.log("Fecha:", selectedDate);
                   console.log("Medio de pago:", medioPago.label);
-                  Alert.alert("Éxito", "Guardado con éxito", [{ text: "Aceptar" }]);
+                  Alert.alert("Éxito", "Guardado con éxito", [
+                    { text: "Aceptar" },
+                  ]);
                   if (isDisable) {
                     const nuevo = objetivoNum - montoNum;
                     setObjetivo(formatVisual(nuevo));
@@ -273,7 +282,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   input: {
-    justifyContent:  "center",
+    justifyContent: "center",
     width: "75%",
     borderWidth: 1,
     borderColor: "white",
@@ -292,7 +301,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    marginLeft: 51
+    marginLeft: 51,
   },
   inputDisable: {
     borderColor: "black",
@@ -353,7 +362,6 @@ const styles = StyleSheet.create({
   },
   botonEditarConteiner: {
     justifyContent: "center",
-    paddingLeft: 20
-    
+    paddingLeft: 20,
   },
 });
