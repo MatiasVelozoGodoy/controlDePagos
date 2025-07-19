@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY NOT NULL, value TEXT NOT
 INSERT INTO test (value, intValue) VALUES ('test1', 123);
 INSERT INTO test (value, intValue) VALUES ('test2', 456);
 INSERT INTO test (value, intValue) VALUES ('test3', 789);
+
 `);
 
 
