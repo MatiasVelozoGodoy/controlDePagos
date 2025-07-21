@@ -1,6 +1,5 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
-import * as SQLite from 'expo-sqlite';
 import { useState } from "react";
 import {
   Alert,
@@ -18,19 +17,8 @@ import Dropdown from "../components/dropdown";
 import useDatePickerAppointment from "../hooks/useDatePickerAppointment";
 
 
-export default async  function App() {
+export default function App() {
 
-  const db = await SQLite.openDatabaseAsync('controlDePagosDB');
-
-
-  await db.execAsync(`
-PRAGMA journal_mode = WAL;
-CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY NOT NULL, value TEXT NOT NULL, intValue INTEGER);
-INSERT INTO test (value, intValue) VALUES ('test1', 123);
-INSERT INTO test (value, intValue) VALUES ('test2', 456);
-INSERT INTO test (value, intValue) VALUES ('test3', 789);
-
-`);
 
 
   const {
@@ -271,6 +259,13 @@ INSERT INTO test (value, intValue) VALUES ('test3', 789);
               activeOpacity={0.7}
             >
               <Text style={styles.textMonto}>Historial</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("/dba")}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.textMonto}>db</Text>
             </TouchableOpacity>
           </View>
         </View>
