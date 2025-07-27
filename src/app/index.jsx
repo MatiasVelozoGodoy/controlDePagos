@@ -1,5 +1,6 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
+import * as SQLite from "expo-sqlite";
 import { useState } from "react";
 import {
   Alert,
@@ -16,10 +17,18 @@ import Calendario from "../components/calendario";
 import Dropdown from "../components/dropdown";
 import useDatePickerAppointment from "../hooks/useDatePickerAppointment";
 
-
 export default function App() {
-
-
+  async function openDB() {
+    const db = await SQLite.openDatabaseAsync("databaseName");
+    await db.execAsync(`
+PRAGMA journal_mode = WAL;
+CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY NOT NULL, value TEXT NOT NULL, intValue INTEGER);
+INSERT INTO test (value, intValue) VALUES ('test1', 123);
+INSERT INTO test (value, intValue) VALUES ('test2', 456);
+INSERT INTO test (value, intValue) VALUES ('test3', 789);
+`);
+    console.log("abierto");
+  }
 
   const {
     date: selectedDate,
@@ -189,8 +198,25 @@ export default function App() {
                   size={20}
                   onPress={() => {
                     if (isDisable) {
-                      setObjetivoPuesto(true);
-                      setIsDisable(false);
+                      Alert.alert(
+                        "Objetivo",
+                        "Estas por modificar tu objetivo, ¿Estas segura?",
+                        [
+                          {
+                            text: "Cancelar",
+                            onPress: () => console.log("cancelado"),
+                            style: "cancel",
+                          },
+                          {
+                            text: "aceptar",
+                            onPress: () => {
+                              console.log("modificado");
+                              setObjetivoPuesto(true);
+                              setIsDisable(false);
+                            },
+                          },
+                        ]
+                      );
                     } else {
                       setObjetivoPuesto(false);
                       setIsDisable(true);
@@ -262,7 +288,7 @@ export default function App() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => router.push("/dba")}
+              onPress={() => openDB()}
               activeOpacity={0.7}
             >
               <Text style={styles.textMonto}>db</Text>
