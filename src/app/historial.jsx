@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -8,12 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import useDataBase from "../hooks/useDataBase";
 
 const historial = () => {
+  const { verRegistros } = useDataBase();
 
-  useState
-  useRef
-  useEffect
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -22,23 +20,53 @@ const historial = () => {
       >
         <View style={styles.innerContainer}>
           <StatusBar barStyle="light-content" backgroundColor="#000" />
-          <TouchableOpacity style={styles.buttons} activeOpacity={0.7}>
-            <Text style={styles.text}>Julio 2024</Text>
+
+          <TouchableOpacity
+            style={styles.buttons}
+            activeOpacity={0.7}
+            onPress={() => verRegistros("2025-07-01", "2025-07-31")}
+          >
+            <Text style={styles.text}>Julio 2025</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} activeOpacity={0.7}>
-            <Text style={styles.text}>Agosto 2024</Text>
+
+          <TouchableOpacity
+            style={styles.buttons}
+            activeOpacity={0.7}
+            onPress={() => verRegistros("2025-08-01", "2025-08-31")}
+          >
+            <Text style={styles.text}>Agosto 2025</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} activeOpacity={0.7}>
-            <Text style={styles.text}>Septiembre 2024</Text>
+
+          <TouchableOpacity
+            style={styles.buttons}
+            activeOpacity={0.7}
+            onPress={() => verRegistros("2025-09-01", "2025-09-30")}
+          >
+            <Text style={styles.text}>Septiembre 2025</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} activeOpacity={0.7}>
-            <Text style={styles.text}>Octubre 2024</Text>
+
+          <TouchableOpacity
+            style={styles.buttons}
+            activeOpacity={0.7}
+            onPress={() => verRegistros("2025-10-01", "2025-10-31")}
+          >
+            <Text style={styles.text}>Octubre 2025</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} activeOpacity={0.7}>
-            <Text style={styles.text}>Noviembre 2024</Text>
+
+          <TouchableOpacity
+            style={styles.buttons}
+            activeOpacity={0.7}
+            onPress={() => verRegistros("2025-11-01", "2025-11-30")}
+          >
+            <Text style={styles.text}>Noviembre 2025</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons} activeOpacity={0.7}>
-            <Text style={styles.text}>Diciembre 2024</Text>
+
+          <TouchableOpacity
+            style={styles.buttons}
+            activeOpacity={0.7}
+            onPress={() => verRegistros("2025-12-01", "2025-12-31")}
+          >
+            <Text style={styles.text}>Diciembre 2025</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -54,7 +82,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   innerContainer: {
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 16,
   },
   buttons: {

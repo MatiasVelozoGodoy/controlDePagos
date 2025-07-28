@@ -54,15 +54,31 @@ export default function useDataBase() {
     console.log("Resultado INSERT:", result);
   }
 
-  async function verRegistros() {
-    const db = dbRef.current;
-    if (!db) {
-      console.error("DB no inicializada");
-      return;
-    }
-    const rows = await db.getAllAsync("SELECT c.fecha AS Fecha, c.ic as IC, c.monto AS Monto_Total, c.montoReal AS Monto_Real, m.nombre AS Medio_de_pago FROM control c INNER JOIN mediosDePago m ON c.medioDePago = m.id");
-    console.log("📋 Registros:", rows);
+  async function verRegistros(filtroFecha = null,  hasta = null) {
+  const db = dbRef.current;
+  if (!db) {
+    console.error("DB no inicializada");
+    return;
   }
+
+  let query = `
+    SELECT c.fecha AS Fecha, 
+      c.ic as IC, 
+      c.monto AS Monto_Total, 
+      c.montoReal AS Monto_Real, 
+      m.nombre AS Medio_de_pago 
+    FROM control c 
+    INNER JOIN mediosDePago m ON c.medioDePago = m.id
+  `;
+
+  if (filtroFecha) {
+    query += ` WHERE fecha BETWEEN '${filtroFecha}' AND '${hasta}'`;
+  }
+
+  const rows = await db.getAllAsync(query);
+  console.log("📋 Registros:", rows);
+}
+
 
   useEffect(() => {
     openDB();
