@@ -1,7 +1,7 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
 import * as SQLite from "expo-sqlite";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Alert,
   SafeAreaView,
@@ -18,17 +18,63 @@ import Dropdown from "../components/dropdown";
 import useDatePickerAppointment from "../hooks/useDatePickerAppointment";
 
 export default function App() {
-  async function openDB() {
-    const db = await SQLite.openDatabaseAsync("databaseName");
-    await db.execAsync(`
-PRAGMA journal_mode = WAL;
-CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY NOT NULL, value TEXT NOT NULL, intValue INTEGER);
-INSERT INTO test (value, intValue) VALUES ('test1', 123);
-INSERT INTO test (value, intValue) VALUES ('test2', 456);
-INSERT INTO test (value, intValue) VALUES ('test3', 789);
-`);
-    console.log("abierto");
+
+  const dbRef = useRef(null);
+
+
+async function openDB() {
+  const db = await SQLite.openDatabaseAsync("controlDePagos_DB");
+  await db.execAsync(`
+    PRAGMA journal_mode = WAL;
+    PRAGMA foreign_keys = ON;
+
+    CREATE TABLE IF NOT EXISTS mediosDePago (
+      id INTEGER PRIMARY KEY NOT NULL,
+      valor INTEGER NOT NULL UNIQUE,
+      nombre TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS control (
+      id INTEGER PRIMARY KEY NOT NULL,
+      fecha TEXT NOT NULL,
+      ic INTEGER NOT NULL,
+      objetivo REAL NOT NULL,
+      monto REAL NOT NULL,
+      montoReal REAL NOT NULL,
+      medioDePago INTEGER NOT NULL,
+      FOREIGN KEY (medioDePago) REFERENCES mediosDePago(id)
+    );
+
+    INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (1, 'Transf. Bancaria');
+    INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (2, 'Pago Fácil');
+    INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (3, 'Efectivo');
+    INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (4, 'Tarj. Crédito');
+    INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (5, '100% Honorarios');
+  `);
+  dbRef.current = db;
+  console.log("DB abierta");
+}
+
+useEffect(() => {
+  openDB();
+}, []);
+
+async function saveData() {
+  const db = dbRef.current;
+  if (!db) {
+    console.error("DB no inicializada");
+    return;
   }
+  const result = await db.runAsync(
+    "INSERT INTO control (fecha, ic, objetivo, monto, montoReal, medioDePago) VALUES (date('now'), ?, ?, ?, ?, ?)",
+    ic,
+    objetivoNum,
+    parseFloat(monto),
+    montoNum,
+    medioPago.value
+  );
+  console.log("Resultado INSERT:", result);
+}
 
   const {
     date: selectedDate,
@@ -265,6 +311,7 @@ INSERT INTO test (value, intValue) VALUES ('test3', 789);
                   console.log("IC:", ic);
                   console.log("Fecha:", selectedDate);
                   console.log("Medio de pago:", medioPago.label);
+                  saveData()
                   Alert.alert("Éxito", "Guardado con éxito", [
                     { text: "Aceptar" },
                   ]);
@@ -288,7 +335,7 @@ INSERT INTO test (value, intValue) VALUES ('test3', 789);
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => openDB()}
+              onPress={() => {{openDB()}; router.push("/dbas")}}
               activeOpacity={0.7}
             >
               <Text style={styles.textMonto}>db</Text>

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,6 +10,10 @@ import {
 } from "react-native";
 
 const historial = () => {
+
+  useState
+  useRef
+  useEffect
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
