@@ -41,7 +41,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => verRegistros("2025-08-01", "2025-08-31")}
+            onPress={() => {verRegistros("2025-08-01", "2025-08-31")}}
           >
             <Text style={styles.text}>Agosto 2025</Text>
           </TouchableOpacity>
@@ -49,7 +49,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => verRegistros("2025-09-01", "2025-09-30")}
+            onPress={() => {verRegistros("2025-09-01", "2025-09-30")}}
           >
             <Text style={styles.text}>Septiembre 2025</Text>
           </TouchableOpacity>
@@ -57,7 +57,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => verRegistros("2025-10-01", "2025-10-31")}
+            onPress={() => {verRegistros("2025-10-01", "2025-10-31")}}
           >
             <Text style={styles.text}>Octubre 2025</Text>
           </TouchableOpacity>
@@ -65,7 +65,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => verRegistros("2025-11-01", "2025-11-30")}
+            onPress={() => {verRegistros("2025-11-01", "2025-11-30")}}
           >
             <Text style={styles.text}>Noviembre 2025</Text>
           </TouchableOpacity>
@@ -73,7 +73,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => verRegistros("2025-12-01", "2025-12-31")}
+            onPress={() => {verRegistros("2025-12-01", "2025-12-31")}}
           >
             <Text style={styles.text}>Diciembre 2025</Text>
           </TouchableOpacity>

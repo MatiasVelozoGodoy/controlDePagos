@@ -1,8 +1,9 @@
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import AntDesign from "@expo/vector-icons/AntDesign"
+import { useRouter } from "expo-router"
+import { useEffect, useRef, useState } from "react"
 import {
   Alert,
+  Animated,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -11,14 +12,14 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
-import Calendario from "../components/calendario";
-import Dropdown from "../components/dropdown";
-import useDataBase from "../hooks/useDataBase";
-import useDatePickerAppointment from "../hooks/useDatePickerAppointment";
+} from "react-native"
+import Calendario from "../components/calendario"
+import Dropdown from "../components/dropdown"
+import useDataBase from "../hooks/useDataBase"
+import useDatePickerAppointment from "../hooks/useDatePickerAppointment"
 
 export default function App() {
-  const { saveData } = useDataBase();
+  const { saveData } = useDataBase()
 
   const {
     date: selectedDate,
@@ -26,132 +27,138 @@ export default function App() {
     openPicker,
     handleChange,
     getMinimumDate,
-  } = useDatePickerAppointment();
-  const router = useRouter();
-  const [ic, setIc] = useState("");
-  const [objetivo, setObjetivo] = useState("");
-  const [objetivoNum, setObjetivoNum] = useState(0);
-  const [monto, setMonto] = useState("");
-  const [montoNum, setMontoNum] = useState(0);
-  const [medioPago, setMedioPago] = useState({ label: "", value: "" });
-  const [objetivoPuesto, setObjetivoPuesto] = useState(true);
-  const [isDisable, setIsDisable] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
+  } = useDatePickerAppointment()
+  const router = useRouter()
+  const [ic, setIc] = useState("")
+  const [objetivo, setObjetivo] = useState("")
+  const [objetivoNum, setObjetivoNum] = useState(0)
+  const [monto, setMonto] = useState("")
+  const [montoNum, setMontoNum] = useState(0)
+  const [medioPago, setMedioPago] = useState({ label: "", value: "" })
+  const [objetivoPuesto, setObjetivoPuesto] = useState(true)
+  const [isDisable, setIsDisable] = useState(false)
+  // Estados de validación individuales
+  const [isIcEmpty, setIsIcEmpty] = useState(false)
+  const [isMontoEmpty, setIsMontoEmpty] = useState(false)
+
+  // Nuevo estado para controlar la visibilidad del contenido animado
+  const [showContent, setShowContent] = useState(false)
+  // Valor animado para la opacidad
+  const fadeAnim = useRef(new Animated.Value(0)).current
+
+  useEffect(() => {
+    const shouldShow = objetivo !== "" && isDisable
+
+    if (shouldShow) {
+      setShowContent(true)
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start()
+    } else {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => {
+        setShowContent(false)
+      })
+    }
+  }, [objetivo, isDisable, fadeAnim])
 
   const formatMonto = (val) => {
-    if (isEmpty && val.trim() !== "") setIsEmpty(false);
+    // Restablecer el estado de vacío para Monto cuando se escribe
+    if (isMontoEmpty && val.trim() !== "") setIsMontoEmpty(false)
     if (!val || val.trim() === "") {
-      setMonto("");
-      setMontoNum(0);
-      return;
+      setMonto("")
+      setMontoNum(0)
+      return
     }
 
-    val = val.replace(/[^0-9,]/g, "");
+    val = val.replace(/[^0-9,]/g, "")
 
-    const comaCount = (val.match(/,/g) || []).length;
-    if (comaCount > 1) return;
+    const comaCount = (val.match(/,/g) || []).length
+    if (comaCount > 1) return
 
-    const [entero, decimal] = val.split(",");
+    const [entero, decimal] = val.split(",")
 
     if (!entero) {
-      setMonto("");
-      setMontoNum(0);
-      return;
+      setMonto("")
+      setMontoNum(0)
+      return
     }
 
-    const formattedEntero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    const formattedDecimal = decimal?.slice(0, 2) ?? "";
+    const formattedEntero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    const formattedDecimal = decimal?.slice(0, 2) ?? ""
 
-    const visual =
-      decimal !== undefined
-        ? `${formattedEntero},${formattedDecimal}`
-        : formattedEntero;
+    const visual = decimal !== undefined ? `${formattedEntero},${formattedDecimal}` : formattedEntero
 
-    const cleanEntero = Number.parseInt(entero) || 0;
-    const cleanDecimal = decimal
-      ? Number.parseInt(decimal.padEnd(2, "0").slice(0, 2))
-      : 0;
-    const cleanNumber = cleanEntero + cleanDecimal / 75;
+    const cleanEntero = Number.parseInt(entero) || 0
+    const cleanDecimal = decimal ? Number.parseInt(decimal.padEnd(2, "0").slice(0, 2)) : 0
+    const cleanNumber = cleanEntero + cleanDecimal / 75
 
-    const resultado = Number.parseFloat((cleanNumber * 0.2541).toFixed(2));
+    const resultado = Number.parseFloat((cleanNumber * 0.2541).toFixed(2))
 
-    setMonto(visual);
-    setMontoNum(isNaN(resultado) ? 0 : resultado);
-  };
+    setMonto(visual)
+    setMontoNum(isNaN(resultado) ? 0 : resultado)
+  }
 
   const formatObjetivo = (val) => {
     if (!val || val.trim() === "") {
-      setObjetivo("");
-      setObjetivoNum(0);
-      return;
+      setObjetivo("")
+      setObjetivoNum(0)
+      return
     }
 
-    val = val.replace(/[^0-9,]/g, "");
+    val = val.replace(/[^0-9,]/g, "")
 
-    const comaCount = (val.match(/,/g) || []).length;
-    if (comaCount > 1) return;
+    const comaCount = (val.match(/,/g) || []).length
+    if (comaCount > 1) return
 
-    const [entero, decimal] = val.split(",");
+    const [entero, decimal] = val.split(",")
 
     if (!entero) {
-      setObjetivo("");
-      setObjetivoNum(0);
-      return;
+      setObjetivo("")
+      setObjetivoNum(0)
+      return
     }
 
-    const formattedEntero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    const formattedDecimal = decimal?.slice(0, 2) ?? "";
+    const formattedEntero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    const formattedDecimal = decimal?.slice(0, 2) ?? ""
 
-    const visual =
-      decimal !== undefined
-        ? `${formattedEntero},${formattedDecimal}`
-        : formattedEntero;
+    const visual = decimal !== undefined ? `${formattedEntero},${formattedDecimal}` : formattedEntero
 
-    const cleanEntero = Number.parseInt(entero) || 0;
-    const cleanDecimal = decimal
-      ? Number.parseInt(decimal.padEnd(2, "0").slice(0, 2))
-      : 0;
-    const cleanNumber = cleanEntero + cleanDecimal / 100;
+    const cleanEntero = Number.parseInt(entero) || 0
+    const cleanDecimal = decimal ? Number.parseInt(decimal.padEnd(2, "0").slice(0, 2)) : 0
+    const cleanNumber = cleanEntero + cleanDecimal / 100
 
-    setObjetivo(visual);
-    setObjetivoNum(isNaN(cleanNumber) ? 0 : cleanNumber);
-  };
+    setObjetivo(visual)
+    setObjetivoNum(isNaN(cleanNumber) ? 0 : cleanNumber)
+  }
 
   const formatVisual = (num) => {
-    if (isNaN(num) || num === 0) return "0,00";
+    if (isNaN(num) || num === 0) return "0,00"
 
-    const parts = num.toFixed(2).split(".");
-    const entero = parts[0];
-    const decimal = parts[1];
-    const formattedEntero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    return `${formattedEntero},${decimal}`;
-  };
+    const parts = num.toFixed(2).split(".")
+    const entero = parts[0]
+    const decimal = parts[1]
+    const formattedEntero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    return `${formattedEntero},${decimal}`
+  }
 
   const formatIC = (val) => {
-    if (isEmpty && val.trim() !== "") setIsEmpty(false);
-    const cleaned = val.replace(/[^0-9]/g, "");
-    setIc(cleaned);
-  };
+    // Restablecer el estado de vacío para IC cuando se escribe
+    if (isIcEmpty && val.trim() !== "") setIsIcEmpty(false)
+    const cleaned = val.replace(/[^0-9]/g, "")
+    setIc(cleaned)
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
         <View style={styles.innerContainer}>
           <StatusBar barStyle="light-content" backgroundColor="#000" />
-
-          <View style={styles.fecha}>
-            <Calendario
-              label="Elegir fecha"
-              value={selectedDate}
-              onChange={handleChange}
-              show={showDatePicker}
-              onPress={openPicker}
-              minimumDate={getMinimumDate()}
-            />
-          </View>
 
           <Text style={styles.text}>Objetivo</Text>
           <View style={styles.objetivoConteiner}>
@@ -169,8 +176,8 @@ export default function App() {
               <TouchableOpacity
                 style={styles.iconButton}
                 onPress={() => {
-                  setIsDisable(false);
-                  setObjetivoPuesto(true);
+                  setIsDisable(false)
+                  setObjetivoPuesto(true)
                 }}
                 activeOpacity={0.7}
               >
@@ -180,28 +187,28 @@ export default function App() {
                   size={20}
                   onPress={() => {
                     if (isDisable) {
-                      Alert.alert(
-                        "Objetivo",
-                        "Estas por modificar tu objetivo, ¿Estas segura?",
-                        [
-                          {
-                            text: "Cancelar",
-                            onPress: () => console.log("cancelado"),
-                            style: "cancel",
+                      Alert.alert("Objetivo", "Estas por modificar tu objetivo, ¿Estas segura?", [
+                        {
+                          text: "Cancelar",
+                          onPress: () => console.log("cancelado"),
+                          style: "cancel",
+                        },
+                        {
+                          text: "aceptar",
+                          onPress: () => {
+                            console.log("modificado")
+                            setObjetivoPuesto(true)
+                            setIsDisable(false)
                           },
-                          {
-                            text: "aceptar",
-                            onPress: () => {
-                              console.log("modificado");
-                              setObjetivoPuesto(true);
-                              setIsDisable(false);
-                            },
-                          },
-                        ]
-                      );
+                        },
+                      ])
                     } else {
-                      setObjetivoPuesto(false);
-                      setIsDisable(true);
+                      if (objetivo === "") {
+                        Alert.alert("Error", "Debes cargar tu objetivo", [{ text: "Aceptar" }])
+                      } else {
+                        setObjetivoPuesto(false)
+                        setIsDisable(true)
+                      }
                     }
                   }}
                 />
@@ -209,89 +216,106 @@ export default function App() {
             </View>
           </View>
 
-          <Text style={styles.text}>IC</Text>
-          <TextInput
-            style={!isEmpty ? styles.input : styles.inputEmpty}
-            placeholder="IC"
-            placeholderTextColor="#fffa"
-            keyboardType="numeric"
-            value={ic}
-            onChangeText={formatIC}
-            maxLength={10}
-          />
+          {showContent && (
+            <Animated.View style={{ opacity: fadeAnim, width: "100%", alignItems: "center" }}>
+              <View style={styles.fecha}>
+                <Calendario
+                  label="Elegir fecha"
+                  value={selectedDate}
+                  onChange={handleChange}
+                  show={showDatePicker}
+                  onPress={openPicker}
+                  minimumDate={getMinimumDate()}
+                />
+              </View>
+              <Text style={styles.text}>IC</Text>
+              <TextInput
+                style={!isIcEmpty ? styles.input : styles.inputEmpty} // Usar isIcEmpty
+                placeholder="IC"
+                placeholderTextColor="#fffa"
+                keyboardType="numeric"
+                value={ic}
+                onChangeText={formatIC}
+                maxLength={10}
+              />
 
-          <Text style={styles.text}>Monto</Text>
-          <TextInput
-            style={!isEmpty ? styles.input : styles.inputEmpty}
-            placeholder="0,00"
-            placeholderTextColor="#fffa"
-            keyboardType="numeric"
-            value={monto}
-            onChangeText={formatMonto}
-          />
+              <Text style={styles.text}>Monto</Text>
+              <TextInput
+                style={!isMontoEmpty ? styles.input : styles.inputEmpty} // Usar isMontoEmpty
+                placeholder="0,00"
+                placeholderTextColor="#fffa"
+                keyboardType="numeric"
+                value={monto}
+                onChangeText={formatMonto}
+              />
 
-          <Text style={styles.text}>Medio de Pago</Text>
-          <View style={styles.dropdown}>
-            <Dropdown value={medioPago} setValue={setMedioPago} />
-          </View>
+              <Text style={styles.text}>Medio de Pago</Text>
+              <View style={styles.dropdown}>
+                <Dropdown value={medioPago} setValue={setMedioPago} />
+              </View>
 
-          <View style={styles.totalContainer}>
-            <Text style={styles.text}>Total</Text>
-            <Text style={styles.textMonto}>${formatVisual(montoNum)}</Text>
-          </View>
+              <View style={styles.totalContainer}>
+                <Text style={styles.text}>Total</Text>
+                <Text style={styles.textMonto}>${formatVisual(montoNum)}</Text>
+              </View>
 
-          <View style={styles.botonesContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                if (ic === "") {
-                  setIsEmpty(true);
-                }
-                if (monto === "") {
-                  setIsEmpty(true);
-                }
-                if (
-                  monto === "" ||
-                  objetivo === "" ||
-                  ic === "" ||
-                  medioPago.value === ""
-                ) {
-                  Alert.alert("Faltan cosas", "Rellena todos los campos", [
-                    { text: "Aceptar" },
-                  ]);
-                } else {
-                  saveData(ic, objetivoNum, monto, montoNum, medioPago.value);
-                  Alert.alert("Éxito", "Guardado con éxito", [
-                    { text: "Aceptar" },
-                  ]);
-                  if (isDisable) {
-                    const nuevo = objetivoNum - montoNum;
-                    setObjetivo(formatVisual(nuevo));
-                    setObjetivoNum(nuevo);
-                    setIsEmpty(false);
-                    setIc("");
-                    setMonto("");
-                    setMedioPago({ value: "" });
-                    setMontoNum("$0,00");
-                  }
-                }
-              }}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.textMonto}>Guardar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => router.push("/historial")}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.textMonto}>Historial</Text>
-            </TouchableOpacity>
-          </View>
+              <View style={styles.botonesContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    let hasError = false
+
+                    if (ic === "") {
+                      setIsIcEmpty(true)
+                      hasError = true
+                    } else {
+                      setIsIcEmpty(false)
+                    }
+
+                    if (monto === "") {
+                      setIsMontoEmpty(true)
+                      hasError = true
+                    } else {
+                      setIsMontoEmpty(false)
+                    }
+
+                    if (medioPago.value === "") {
+                      hasError = true // Asumiendo que Dropdown también necesita validación
+                    }
+
+                    if (hasError) {
+                      Alert.alert("Faltan cosas", "Rellena todos los campos", [{ text: "Aceptar" }])
+                    } else {
+                      saveData(ic, objetivoNum, monto, montoNum, medioPago.value)
+                      Alert.alert("Éxito", "Guardado con éxito", [{ text: "Aceptar" }])
+                      if (isDisable) {
+                        const nuevo = objetivoNum - montoNum
+                        setObjetivo(formatVisual(nuevo))
+                        setObjetivoNum(nuevo)
+                        // Resetear estados de vacío después de guardar con éxito
+                        setIsIcEmpty(false)
+                        setIsMontoEmpty(false)
+                        setIc("")
+                        setMonto("")
+                        setMedioPago({ value: "" })
+                        setMontoNum("$0,00")
+                      }
+                    }
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.textMonto}>Guardar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => router.push("/historial")} activeOpacity={0.7}>
+                  <Text style={styles.textMonto}>Historial</Text>
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -416,4 +440,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingLeft: 10,
   },
-});
+})
