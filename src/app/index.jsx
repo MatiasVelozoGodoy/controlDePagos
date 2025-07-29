@@ -1,4 +1,5 @@
 import AntDesign from "@expo/vector-icons/AntDesign"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useRouter } from "expo-router"
 import { useEffect, useRef, useState } from "react"
 import {
@@ -32,19 +33,51 @@ export default function App() {
   const [ic, setIc] = useState("")
   const [objetivo, setObjetivo] = useState("")
   const [objetivoNum, setObjetivoNum] = useState(0)
+  const [objetivoInicial, setObjetivoInicial] = useState(0) 
   const [monto, setMonto] = useState("")
   const [montoNum, setMontoNum] = useState(0)
   const [medioPago, setMedioPago] = useState({ label: "", value: "" })
   const [objetivoPuesto, setObjetivoPuesto] = useState(true)
   const [isDisable, setIsDisable] = useState(false)
-  // Estados de validación individuales
   const [isIcEmpty, setIsIcEmpty] = useState(false)
   const [isMontoEmpty, setIsMontoEmpty] = useState(false)
 
-  // Nuevo estado para controlar la visibilidad del contenido animado
   const [showContent, setShowContent] = useState(false)
-  // Valor animado para la opacidad
   const fadeAnim = useRef(new Animated.Value(0)).current
+
+  const saveObjetivoToStorage = async (objetivoValue, objetivoNumValue, objetivoInicialValue) => {
+    try {
+      await AsyncStorage.setItem("objetivo", objetivoValue)
+      await AsyncStorage.setItem("objetivoNum", objetivoNumValue.toString())
+      await AsyncStorage.setItem("objetivoInicial", objetivoInicialValue.toString())
+      console.log("Objetivo guardado en AsyncStorage")
+    } catch (error) {
+      console.error("Error guardando objetivo:", error)
+    }
+  }
+
+  const loadObjetivoFromStorage = async () => {
+    try {
+      const savedObjetivo = await AsyncStorage.getItem("objetivo")
+      const savedObjetivoNum = await AsyncStorage.getItem("objetivoNum")
+      const savedObjetivoInicial = await AsyncStorage.getItem("objetivoInicial")
+
+      if (savedObjetivo && savedObjetivoNum && savedObjetivoInicial) {
+        setObjetivo(savedObjetivo)
+        setObjetivoNum(Number.parseFloat(savedObjetivoNum))
+        setObjetivoInicial(Number.parseFloat(savedObjetivoInicial))
+        setIsDisable(true)
+        setObjetivoPuesto(false)
+        console.log("Objetivo cargado desde AsyncStorage:", savedObjetivo)
+      }
+    } catch (error) {
+      console.error("Error cargando objetivo:", error)
+    }
+  }
+
+  useEffect(() => {
+    loadObjetivoFromStorage()
+  }, [])
 
   useEffect(() => {
     const shouldShow = objetivo !== "" && isDisable
@@ -67,8 +100,26 @@ export default function App() {
     }
   }, [objetivo, isDisable, fadeAnim])
 
+  const getObjetivoColor = () => {
+    if (objetivoNum <= 0) {
+      return "#00ff00" 
+    }
+
+    const porcentajeRestante = (objetivoNum / objetivoInicial) * 100
+    if (porcentajeRestante <= 15) {
+      return "#ffff00" 
+    }
+
+    return "#ff0000" 
+  }
+
+  const getPorcentajeCompletado = () => {
+    if (objetivoInicial === 0) return 0
+    const completado = ((objetivoInicial - objetivoNum) / objetivoInicial) * 100
+    return Math.max(0, completado)
+  }
+
   const formatMonto = (val) => {
-    // Restablecer el estado de vacío para Monto cuando se escribe
     if (isMontoEmpty && val.trim() !== "") setIsMontoEmpty(false)
     if (!val || val.trim() === "") {
       setMonto("")
@@ -96,9 +147,14 @@ export default function App() {
 
     const cleanEntero = Number.parseInt(entero) || 0
     const cleanDecimal = decimal ? Number.parseInt(decimal.padEnd(2, "0").slice(0, 2)) : 0
-    const cleanNumber = cleanEntero + cleanDecimal / 75
 
+    const cleanNumber = cleanEntero + cleanDecimal / 100
     const resultado = Number.parseFloat((cleanNumber * 0.2541).toFixed(2))
+
+    console.log("Monto visual:", visual)
+    console.log("Entero:", cleanEntero, "Decimal:", cleanDecimal)
+    console.log("Número limpio:", cleanNumber)
+    console.log("Resultado final:", resultado)
 
     setMonto(visual)
     setMontoNum(isNaN(resultado) ? 0 : resultado)
@@ -148,7 +204,6 @@ export default function App() {
   }
 
   const formatIC = (val) => {
-    // Restablecer el estado de vacío para IC cuando se escribe
     if (isIcEmpty && val.trim() !== "") setIsIcEmpty(false)
     const cleaned = val.replace(/[^0-9]/g, "")
     setIc(cleaned)
@@ -161,9 +216,18 @@ export default function App() {
           <StatusBar barStyle="light-content" backgroundColor="#000" />
 
           <Text style={styles.text}>Objetivo</Text>
+
+          {/* Mostrar porcentaje solo cuando hay objetivo establecido */}
+          {isDisable && objetivoInicial > 0 && (
+            <Text style={styles.porcentajeText}>{getPorcentajeCompletado().toFixed(1)}% completado</Text>
+          )}
+
           <View style={styles.objetivoConteiner}>
             <TextInput
-              style={!isDisable ? styles.inputObjetivo : styles.inputDisable}
+              style={[
+                !isDisable ? styles.inputObjetivo : styles.inputDisable,
+                isDisable && { color: getObjetivoColor() },
+              ]}
               placeholder={!isDisable ? "Objetivo" : objetivo}
               editable={objetivoPuesto}
               placeholderTextColor="#fffa"
@@ -208,6 +272,11 @@ export default function App() {
                       } else {
                         setObjetivoPuesto(false)
                         setIsDisable(true)
+
+                        setObjetivoInicial(objetivoNum)
+                        saveObjetivoToStorage(objetivo, objetivoNum, objetivoNum)
+
+                        console.log("Objetivo reiniciado - Porcentaje vuelve a 0%")
                       }
                     }
                   }}
@@ -230,7 +299,7 @@ export default function App() {
               </View>
               <Text style={styles.text}>IC</Text>
               <TextInput
-                style={!isIcEmpty ? styles.input : styles.inputEmpty} // Usar isIcEmpty
+                style={!isIcEmpty ? styles.input : styles.inputEmpty}
                 placeholder="IC"
                 placeholderTextColor="#fffa"
                 keyboardType="numeric"
@@ -241,7 +310,7 @@ export default function App() {
 
               <Text style={styles.text}>Monto</Text>
               <TextInput
-                style={!isMontoEmpty ? styles.input : styles.inputEmpty} // Usar isMontoEmpty
+                style={!isMontoEmpty ? styles.input : styles.inputEmpty}
                 placeholder="0,00"
                 placeholderTextColor="#fffa"
                 keyboardType="numeric"
@@ -280,25 +349,37 @@ export default function App() {
                     }
 
                     if (medioPago.value === "") {
-                      hasError = true // Asumiendo que Dropdown también necesita validación
+                      hasError = true
                     }
 
                     if (hasError) {
                       Alert.alert("Faltan cosas", "Rellena todos los campos", [{ text: "Aceptar" }])
                     } else {
+                      console.log("Guardando datos:", {
+                        ic,
+                        objetivoNum,
+                        monto,
+                        montoNum,
+                        medioPago: medioPago.value,
+                      })
+
                       saveData(ic, objetivoNum, monto, montoNum, medioPago.value)
                       Alert.alert("Éxito", "Guardado con éxito", [{ text: "Aceptar" }])
+
                       if (isDisable) {
                         const nuevo = objetivoNum - montoNum
-                        setObjetivo(formatVisual(nuevo))
+                        const nuevoObjetivo = formatVisual(nuevo)
+                        setObjetivo(nuevoObjetivo)
                         setObjetivoNum(nuevo)
-                        // Resetear estados de vacío después de guardar con éxito
+
+                        saveObjetivoToStorage(nuevoObjetivo, nuevo, objetivoInicial)
+
                         setIsIcEmpty(false)
                         setIsMontoEmpty(false)
                         setIc("")
                         setMonto("")
                         setMedioPago({ value: "" })
-                        setMontoNum("$0,00")
+                        setMontoNum(0)
                       }
                     }
                   }}
@@ -335,6 +416,14 @@ const styles = StyleSheet.create({
     fontSize: 30,
     padding: 30,
     textAlign: "center",
+  },
+  porcentajeText: {
+    color: "#fffa",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: -20,
+    marginBottom: 10,
+    fontStyle: "italic",
   },
   textMonto: {
     color: "#fffa",
@@ -379,7 +468,6 @@ const styles = StyleSheet.create({
   inputDisable: {
     borderRadius: 6,
     padding: 15,
-    color: "#f00a",
     fontSize: 18,
     textAlign: "center",
     marginLeft: 51,

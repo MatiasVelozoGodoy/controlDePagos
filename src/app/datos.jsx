@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginTop: 30,
+    marginBottom: 30,
     width: "75%",
     alignItems: "center",
     backgroundColor: "#000",

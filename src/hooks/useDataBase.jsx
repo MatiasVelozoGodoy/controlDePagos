@@ -1,11 +1,11 @@
-import * as SQLite from "expo-sqlite";
-import { useEffect, useRef } from "react";
+import * as SQLite from "expo-sqlite"
+import { useEffect, useRef } from "react"
 
 export default function useDataBase() {
-  const dbRef = useRef(null);
+  const dbRef = useRef(null)
 
   async function openDB() {
-    const db = await SQLite.openDatabaseAsync("controlDePagos_DB");
+    const db = await SQLite.openDatabaseAsync("controlDePagos_DB")
     await db.execAsync(`
       PRAGMA journal_mode = WAL;
       PRAGMA foreign_keys = ON;
@@ -32,58 +32,66 @@ export default function useDataBase() {
       INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (3, 'Efectivo');
       INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (4, 'Tarj. Crédito');
       INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (5, '100% Honorarios');
-    `);
-    dbRef.current = db;
-    console.log("DB abierta");
+    `)
+    dbRef.current = db
+    console.log("DB abierta")
   }
 
   async function saveData(ic, objetivoNum, monto, montoNum, medioPagoValue) {
-    const db = dbRef.current;
+    const db = dbRef.current
     if (!db) {
-      console.error("DB no inicializada");
-      return;
+      console.error("DB no inicializada")
+      return
     }
+
+    const cleanMonto = monto.replace(/\./g, "").replace(",", ".")
+    const parsedMonto = Number.parseFloat(cleanMonto) || 0
+
+    console.log("Monto original:", monto)
+    console.log("Monto limpio:", cleanMonto)
+    console.log("Monto parseado:", parsedMonto)
+    console.log("MontoNum (calculado):", montoNum)
+
     const result = await db.runAsync(
       "INSERT INTO control (fecha, ic, objetivo, monto, montoReal, medioDePago) VALUES (date('now'), ?, ?, ?, ?, ?)",
       ic,
       objetivoNum,
-      parseFloat(monto),
+      parsedMonto,
       montoNum,
-      medioPagoValue
-    );
-    console.log("Resultado INSERT:", result);
+      medioPagoValue,
+    )
+    console.log("Resultado INSERT:", result)
   }
 
-  async function verRegistros(filtroFecha = null,  hasta = null) {
-  const db = dbRef.current;
-  if (!db) {
-    console.error("DB no inicializada");
-    return;
+  async function verRegistros(filtroFecha = null, hasta = null) {
+    const db = dbRef.current
+    if (!db) {
+      console.error("DB no inicializada")
+      return
+    }
+
+    let query = `
+      SELECT c.fecha AS Fecha, 
+        c.ic as IC, 
+        c.monto AS Monto_Total, 
+        c.montoReal AS Monto_Real, 
+        m.nombre AS Medio_de_pago 
+      FROM control c 
+      INNER JOIN mediosDePago m ON c.medioDePago = m.id
+    `
+
+    if (filtroFecha) {
+      query += ` WHERE fecha BETWEEN '${filtroFecha}' AND '${hasta}'`
+    }
+
+    const rows = await db.getAllAsync(query)
+    console.log("📋 Registros:", rows)
+    return rows
   }
-
-  let query = `
-    SELECT c.fecha AS Fecha, 
-      c.ic as IC, 
-      c.monto AS Monto_Total, 
-      c.montoReal AS Monto_Real, 
-      m.nombre AS Medio_de_pago 
-    FROM control c 
-    INNER JOIN mediosDePago m ON c.medioDePago = m.id
-  `;
-
-  if (filtroFecha) {
-    query += ` WHERE fecha BETWEEN '${filtroFecha}' AND '${hasta}'`;
-  }
-
-  const rows = await db.getAllAsync(query);
-  console.log("📋 Registros:", rows);
-  return rows
-}
-
 
   useEffect(() => {
-    openDB();
-  }, []);
+    openDB()
+  }, [])
 
-  return { saveData, verRegistros };
+  return { saveData, verRegistros }
 }
