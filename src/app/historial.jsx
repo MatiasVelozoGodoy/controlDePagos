@@ -1,39 +1,31 @@
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import useDataBase from "../hooks/useDataBase";
+import { useRouter } from "expo-router"
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import useDataBase from "../hooks/useDataBase"
 
 const historial = () => {
-  const router = useRouter();
-  const { verRegistros } = useDataBase();
-  const [datos, setDatos] = useState([]);
+  const router = useRouter()
+  const { verRegistros } = useDataBase()
 
-
-setDatos[verRegistros]
-
+  const handleMonthPress = async (startDate, endDate) => {
+    try {
+      const fetchedData = await verRegistros(startDate, endDate)
+      router.push({ pathname: "/datos", params: { data: JSON.stringify(fetchedData) } })
+    } catch (error) {
+      console.error("Error al obtener registros:", error)
+      alert("Error al cargar los registros. Inténtalo de nuevo.")
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
         <View style={styles.innerContainer}>
           <StatusBar barStyle="light-content" backgroundColor="#000" />
 
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => {router.push("/dbas")
-              datos[("2025-07-01", "2025-07-31")]}}
+            onPress={() => handleMonthPress("2025-07-01", "2025-07-31")}
           >
             <Text style={styles.text}>Julio 2025</Text>
           </TouchableOpacity>
@@ -41,7 +33,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => {verRegistros("2025-08-01", "2025-08-31")}}
+            onPress={() => handleMonthPress("2025-08-01", "2025-08-31")}
           >
             <Text style={styles.text}>Agosto 2025</Text>
           </TouchableOpacity>
@@ -49,7 +41,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => {verRegistros("2025-09-01", "2025-09-30")}}
+            onPress={() => handleMonthPress("2025-09-01", "2025-09-30")}
           >
             <Text style={styles.text}>Septiembre 2025</Text>
           </TouchableOpacity>
@@ -57,7 +49,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => {verRegistros("2025-10-01", "2025-10-31")}}
+            onPress={() => handleMonthPress("2025-10-01", "2025-10-31")}
           >
             <Text style={styles.text}>Octubre 2025</Text>
           </TouchableOpacity>
@@ -65,7 +57,7 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => {verRegistros("2025-11-01", "2025-11-30")}}
+            onPress={() => handleMonthPress("2025-11-01", "2025-11-30")}
           >
             <Text style={styles.text}>Noviembre 2025</Text>
           </TouchableOpacity>
@@ -73,15 +65,15 @@ setDatos[verRegistros]
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => {verRegistros("2025-12-01", "2025-12-31")}}
+            onPress={() => handleMonthPress("2025-12-01", "2025-12-31")}
           >
             <Text style={styles.text}>Diciembre 2025</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -115,5 +107,5 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     marginTop: 1,
   },
-});
-export default historial;
+})
+export default historial

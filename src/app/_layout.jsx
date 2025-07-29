@@ -5,7 +5,7 @@ const RootNavigation = () => {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="historial" options={{ headerShown: false }} />
-      <Stack.Screen name="dbas" options={{ headerShown: false }} />      
+      <Stack.Screen name="datos" options={{ headerShown: false }} />      
     </Stack>
   );
 };
