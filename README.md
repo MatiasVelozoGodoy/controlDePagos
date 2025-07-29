@@ -30,20 +30,20 @@ Una aplicación móvil desarrollada en React Native con Expo para el control y s
 ### Pasos de instalación
 
 1. **Clonar el repositorio**
-\`\`\`bash
+```bash
 https://github.com/MatiasVelozoGodoy/controlDePagos.git
 cd controlDePagos
-\`\`\`
+```
 
 2. **Instalar dependencias**
-\`\`\`bash
+```bash
 npm install
 npm i react-native-element-dropdown
 npm i @react-native-async-storage/async-storage
 expo install expo-sqlite @react-native-async-storage/async-storage
 npm i @react-native-community/datetimepicker
 npx expo start
-\`\`\`
+```
 
 ## 💾 Base de Datos
 
@@ -64,7 +64,7 @@ La aplicación calcula automáticamente el progreso y aplica un factor de conver
 
 ## 📁 Estructura del Proyecto
 
-\`\`\`
+```text
 App/
 ├── src/
 │   ├── components/
@@ -77,7 +77,7 @@ App/
 │   ├── historial.jsx            # Pantalla de selección de períodos
 │   ├── index.jsx                # Pantalla principal
 │   └── _layout.jsx              # Configuración de navegación
-\`\`\`
+```
 
 ## 🎯 Funcionalidades Principales
 
