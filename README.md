@@ -107,7 +107,3 @@ App/
 - Visualización detallada de registros
 - Persistencia de datos entre sesiones
 
-
----
-
-⭐ **¡Si te gusta este proyecto, dale una estrella!** ⭐
