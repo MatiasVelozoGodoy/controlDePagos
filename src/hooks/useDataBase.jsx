@@ -77,6 +77,7 @@ export default function useDataBase() {
 
   const rows = await db.getAllAsync(query);
   console.log("📋 Registros:", rows);
+  return rows
 }
 
 

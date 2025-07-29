@@ -1,28 +1,20 @@
-import { Button, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import useDataBase from "../hooks/useDataBase";
 
 
 const dbas = () => {
   
-  const {saveData,
-        verRegistros} = useDataBase()
-
+  const {verRegistros} = useDataBase()
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={styles.scrollContent}
-      >
+    
         <View style={styles.innerContainer}>
           <View style={styles.boton}>
-          <Button
-          title="GOLA"
-          onPress={() => verRegistros()}          
-          />
+            
+
           </View>
         </View>
-      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -40,7 +32,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   boton:{
-    
+    color: 'white',
     paddingTop: 242
   }
 });

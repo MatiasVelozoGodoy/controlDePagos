@@ -1,3 +1,5 @@
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -10,7 +12,13 @@ import {
 import useDataBase from "../hooks/useDataBase";
 
 const historial = () => {
+  const router = useRouter();
   const { verRegistros } = useDataBase();
+  const [datos, setDatos] = useState([]);
+
+
+setDatos[verRegistros]
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -24,7 +32,8 @@ const historial = () => {
           <TouchableOpacity
             style={styles.buttons}
             activeOpacity={0.7}
-            onPress={() => verRegistros("2025-07-01", "2025-07-31")}
+            onPress={() => {router.push("/dbas")
+              datos[("2025-07-01", "2025-07-31")]}}
           >
             <Text style={styles.text}>Julio 2025</Text>
           </TouchableOpacity>

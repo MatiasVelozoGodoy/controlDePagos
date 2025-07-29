@@ -19,8 +19,7 @@ import useDatePickerAppointment from "../hooks/useDatePickerAppointment";
 
 export default function App() {
 
-const {saveData,
-      verRegistros} = useDataBase()
+const { saveData } = useDataBase()
 
 
   const {
@@ -39,6 +38,7 @@ const {saveData,
   const [medioPago, setMedioPago] = useState({ label: "", value: "" });
   const [objetivoPuesto, setObjetivoPuesto] = useState(true);
   const [isDisable, setIsDisable] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false)
 
   const formatMonto = (val) => {
     if (!val || val.trim() === "") {
@@ -155,7 +155,7 @@ const {saveData,
 
           <Text style={styles.text}>IC</Text>
           <TextInput
-            style={styles.input}
+            style={!isEmpty ? styles.input : styles.inputEmpty}
             placeholder="IC"
             placeholderTextColor="#fffa"
             keyboardType="numeric"
@@ -250,6 +250,7 @@ const {saveData,
                   ic === "" ||
                   medioPago.value === ""
                 ) {
+                  setIsEmpty(true)
                   Alert.alert("Faltan cosas", "Rellena todos los campos", [
                     { text: "Aceptar" },
                   ]);
@@ -262,6 +263,11 @@ const {saveData,
                     const nuevo = objetivoNum - montoNum;
                     setObjetivo(formatVisual(nuevo));
                     setObjetivoNum(nuevo);
+                    setIsEmpty(false)
+                    setIc("")
+                    setMonto("")
+                    setMedioPago({value: ""})
+                    setMontoNum("$0,00")
                   }
                 }
               }}
@@ -275,13 +281,6 @@ const {saveData,
               activeOpacity={0.7}
             >
               <Text style={styles.textMonto}>Historial</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => router.push("/dbas")}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.textMonto}>db</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -320,6 +319,17 @@ const styles = StyleSheet.create({
     width: "75%",
     borderWidth: 1,
     borderColor: "white",
+    borderRadius: 6,
+    padding: 15,
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+  },
+  inputEmpty: {
+    justifyContent: "center",
+    width: "75%",
+    borderWidth: 1,
+    borderColor: "red",
     borderRadius: 6,
     padding: 15,
     color: "white",
