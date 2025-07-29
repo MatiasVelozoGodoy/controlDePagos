@@ -1,3 +1,5 @@
+"use client"
+
 import AntDesign from "@expo/vector-icons/AntDesign"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useRouter } from "expo-router"
@@ -33,7 +35,7 @@ export default function App() {
   const [ic, setIc] = useState("")
   const [objetivo, setObjetivo] = useState("")
   const [objetivoNum, setObjetivoNum] = useState(0)
-  const [objetivoInicial, setObjetivoInicial] = useState(0) 
+  const [objetivoInicial, setObjetivoInicial] = useState(0)
   const [monto, setMonto] = useState("")
   const [montoNum, setMontoNum] = useState(0)
   const [medioPago, setMedioPago] = useState({ label: "", value: "" })
@@ -41,9 +43,11 @@ export default function App() {
   const [isDisable, setIsDisable] = useState(false)
   const [isIcEmpty, setIsIcEmpty] = useState(false)
   const [isMontoEmpty, setIsMontoEmpty] = useState(false)
+  const [isLoading, setIsLoading] = useState(true) 
 
   const [showContent, setShowContent] = useState(false)
   const fadeAnim = useRef(new Animated.Value(0)).current
+  const progressAnim = useRef(new Animated.Value(0)).current
 
   const saveObjetivoToStorage = async (objetivoValue, objetivoNumValue, objetivoInicialValue) => {
     try {
@@ -68,6 +72,8 @@ export default function App() {
         setObjetivoPuesto(false)
       }
     } catch (error) {
+    } finally {
+      setIsLoading(false) 
     }
   }
 
@@ -76,6 +82,8 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    if (isLoading) return
+
     const shouldShow = objetivo !== "" && isDisable
 
     if (shouldShow) {
@@ -94,16 +102,25 @@ export default function App() {
         setShowContent(false)
       })
     }
-  }, [objetivo, isDisable, fadeAnim])
+  }, [objetivo, isDisable, fadeAnim, isLoading])
+
+  useEffect(() => {
+    const porcentaje = getPorcentajeCompletado()
+    Animated.timing(progressAnim, {
+      toValue: porcentaje,
+      duration: 800,
+      useNativeDriver: false,
+    }).start()
+  }, [objetivoNum, objetivoInicial])
 
   const getObjetivoColor = () => {
     if (objetivoNum <= 0) {
-      return "#00ff00" 
+      return "#00ff00"
     }
 
     const porcentajeRestante = (objetivoNum / objetivoInicial) * 100
     if (porcentajeRestante <= 15) {
-      return "#ffff00" 
+      return "#ffff00"
     }
 
     return "#ff0000" 
@@ -264,7 +281,6 @@ export default function App() {
 
                         setObjetivoInicial(objetivoNum)
                         saveObjetivoToStorage(objetivo, objetivoNum, objetivoNum)
-
                       }
                     }
                   }}
@@ -404,6 +420,21 @@ const styles = StyleSheet.create({
     marginTop: -20,
     marginBottom: 10,
     fontStyle: "italic",
+  },
+  progressBarBackground: {
+    width: "75%",
+    height: 20,
+    backgroundColor: "#333",
+    borderRadius: 10,
+    overflow: "hidden",
+    marginTop: 5,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#555",
+  },
+  progressBarFill: {
+    height: "100%",
+    borderRadius: 9,
   },
   textMonto: {
     color: "#fffa",
