@@ -18,9 +18,7 @@ import useDataBase from "../hooks/useDataBase";
 import useDatePickerAppointment from "../hooks/useDatePickerAppointment";
 
 export default function App() {
-
-const { saveData } = useDataBase()
-
+  const { saveData } = useDataBase();
 
   const {
     date: selectedDate,
@@ -38,9 +36,10 @@ const { saveData } = useDataBase()
   const [medioPago, setMedioPago] = useState({ label: "", value: "" });
   const [objetivoPuesto, setObjetivoPuesto] = useState(true);
   const [isDisable, setIsDisable] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false)
+  const [isEmpty, setIsEmpty] = useState(false);
 
   const formatMonto = (val) => {
+    if (isEmpty && val.trim() !== "") setIsEmpty(false);
     if (!val || val.trim() === "") {
       setMonto("");
       setMontoNum(0);
@@ -129,6 +128,7 @@ const { saveData } = useDataBase()
   };
 
   const formatIC = (val) => {
+    if (isEmpty && val.trim() !== "") setIsEmpty(false);
     const cleaned = val.replace(/[^0-9]/g, "");
     setIc(cleaned);
   };
@@ -152,17 +152,6 @@ const { saveData } = useDataBase()
               minimumDate={getMinimumDate()}
             />
           </View>
-
-          <Text style={styles.text}>IC</Text>
-          <TextInput
-            style={!isEmpty ? styles.input : styles.inputEmpty}
-            placeholder="IC"
-            placeholderTextColor="#fffa"
-            keyboardType="numeric"
-            value={ic}
-            onChangeText={formatIC}
-            maxLength={10}
-          />
 
           <Text style={styles.text}>Objetivo</Text>
           <View style={styles.objetivoConteiner}>
@@ -220,9 +209,20 @@ const { saveData } = useDataBase()
             </View>
           </View>
 
+          <Text style={styles.text}>IC</Text>
+          <TextInput
+            style={!isEmpty ? styles.input : styles.inputEmpty}
+            placeholder="IC"
+            placeholderTextColor="#fffa"
+            keyboardType="numeric"
+            value={ic}
+            onChangeText={formatIC}
+            maxLength={10}
+          />
+
           <Text style={styles.text}>Monto</Text>
           <TextInput
-            style={styles.input}
+            style={!isEmpty ? styles.input : styles.inputEmpty}
             placeholder="0,00"
             placeholderTextColor="#fffa"
             keyboardType="numeric"
@@ -244,18 +244,23 @@ const { saveData } = useDataBase()
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
+                if (ic === "") {
+                  setIsEmpty(true);
+                }
+                if (monto === "") {
+                  setIsEmpty(true);
+                }
                 if (
                   monto === "" ||
                   objetivo === "" ||
                   ic === "" ||
                   medioPago.value === ""
                 ) {
-                  setIsEmpty(true)
                   Alert.alert("Faltan cosas", "Rellena todos los campos", [
                     { text: "Aceptar" },
                   ]);
                 } else {
-                  saveData(ic, objetivoNum, monto, montoNum, medioPago.value)
+                  saveData(ic, objetivoNum, monto, montoNum, medioPago.value);
                   Alert.alert("Éxito", "Guardado con éxito", [
                     { text: "Aceptar" },
                   ]);
@@ -263,11 +268,11 @@ const { saveData } = useDataBase()
                     const nuevo = objetivoNum - montoNum;
                     setObjetivo(formatVisual(nuevo));
                     setObjetivoNum(nuevo);
-                    setIsEmpty(false)
-                    setIc("")
-                    setMonto("")
-                    setMedioPago({value: ""})
-                    setMontoNum("$0,00")
+                    setIsEmpty(false);
+                    setIc("");
+                    setMonto("");
+                    setMedioPago({ value: "" });
+                    setMontoNum("$0,00");
                   }
                 }
               }}

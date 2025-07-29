@@ -18,12 +18,11 @@ const DropdownComponent = ({ value, setValue }) => {
     <Dropdown
       style={[
         styles.dropdown,
-        isFocus && { borderColor: "#fffa", borderWidth: 1.6 },
+        isFocus && { borderColor: "#fffa", borderWidth: 1.6 }
       ]}
       placeholderStyle={styles.placeholderStyle}
       selectedTextStyle={styles.selectedTextStyle}
-      itemContainerStyle={{ color: "red" }}
-      inputSearchStyle={styles.inputSearchStyle}
+      itemContainerStyle={{ color: "green" }}
       iconStyle={styles.iconStyle}
       itemTextStyle={{ color: "#fffa" }}
       data={data}
@@ -31,7 +30,6 @@ const DropdownComponent = ({ value, setValue }) => {
       containerStyle={{ backgroundColor: "black", borderRadius: 6 }}
       valueField="value"
       placeholder={!isFocus ? "Seleccionar" : "Seleccionar"}
-      searchPlaceholder="Buscar..."
       value={value?.value}
       activeColor="#333"
       onFocus={() => setIsFocus(true)}
@@ -77,9 +75,5 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     color: "white",
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
+  }
 });
