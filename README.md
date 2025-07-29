@@ -1,50 +1,113 @@
-# Welcome to your Expo app 👋
+# 💰 Control de Pagos - App React Native
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Una aplicación móvil desarrollada en React Native con Expo para el control y seguimiento de pagos y objetivos financieros.
 
-## Get started
+## 🚀 Características
 
-1. Install dependencies
+- **Gestión de Objetivos**: Establece y modifica metas financieras
+- **Seguimiento de Progreso**: Porcentaje completado en tiempo real
+- **Registro de Pagos**: IC, monto, fecha y medio de pago
+- **Múltiples Medios de Pago**: Transferencia, efectivo, tarjetas, etc.
+- **Historial por Períodos**: Consulta registros por meses
+- **Persistencia de Datos**: Base de datos SQLite local
+- **Interfaz Intuitiva**: Tema oscuro con validaciones
 
-   ```bash
-   npm install
-   ```
+## 🛠️ Tecnologías
 
-2. Start the app
+- React Native + Expo
+- SQLite (base de datos local)
+- AsyncStorage (configuraciones)
+- React Navigation
 
-   ```bash
-   npx expo start
-   ```
+## 📦 Instalación
 
-In the output, you'll find options to open the app in a
+### Prerrequisitos
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Node.js (v14 o superior)
+- Expo CLI
+- Dispositivo móvil o emulador
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Pasos de instalación
 
-## Get a fresh project
+1. **Clonar el repositorio**
+\`\`\`bash
+https://github.com/MatiasVelozoGodoy/controlDePagos.git
+cd controlDePagos
+\`\`\`
 
-When you're ready, run:
+2. **Instalar dependencias**
+\`\`\`bash
+npm install
+npm i react-native-element-dropdown
+npm i @react-native-async-storage/async-storage
+expo install expo-sqlite @react-native-async-storage/async-storage
+npm i @react-native-community/datetimepicker
+npx expo start
+\`\`\`
 
-```bash
-npm run reset-project
-```
+## 💾 Base de Datos
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+La app utiliza SQLite con dos tablas principales:
+- **Medios de pago**: Catálogo de medios de pago
+- **Control**: Registros de pagos con fecha, monto, IC y medio de pago
 
-## Learn more
+Los objetivos se guardan en AsyncStorage para persistir entre sesiones.
 
-To learn more about developing your project with Expo, look at the following resources:
+## 📱 Uso
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. Establece tu objetivo financiero
+2. Registra pagos completando todos los campos
+3. Visualiza el progreso con colores dinámicos
+4. Consulta el historial por períodos específicos
 
-## Join the community
+La aplicación calcula automáticamente el progreso y aplica un factor de conversión a los montos ingresados.
 
-Join our community of developers creating universal apps.
+## 📁 Estructura del Proyecto
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+\`\`\`
+App/
+├── src/
+│   ├── components/
+│   │   ├── dropdown.jsx          # Componente selector de medio de pago
+│   │   └── calendario.jsx        # Componente selector de fecha
+│   ├── hooks/
+│   │   ├── useDataBase.jsx       # Hook para manejo de SQLite
+│   │   └── useDatePickerAppointment.jsx  # Hook para selector de fecha
+│   ├── datos.jsx                 # Pantalla de visualización de registros
+│   ├── historial.jsx            # Pantalla de selección de períodos
+│   ├── index.jsx                # Pantalla principal
+│   └── _layout.jsx              # Configuración de navegación
+\`\`\`
+
+## 🎯 Funcionalidades Principales
+
+### 1. Gestión de Objetivos
+- Establecer objetivo financiero inicial
+- Modificar objetivo existente (reinicia el progreso)
+- Persistencia automática en AsyncStorage
+- Indicadores visuales de progreso:
+  - 🔴 **Rojo**: Objetivo lejano
+  - 🟡 **Amarillo**: Falta 15% o menos
+  - 🟢 **Verde**: Objetivo alcanzado o superado
+
+### 2. Registro de Pagos
+- **IC**: Código interno de identificación
+- **Monto**: Cantidad con formato argentino (punto para miles, coma para decimales)
+- **Medio de Pago**: 
+  - Transferencia Bancaria
+  - Pago Fácil
+  - Efectivo
+  - Tarjeta de Crédito
+  - 100% Honorarios
+- **Fecha**: Selector de calendario
+- **Cálculo Automático**: Aplicación de factor de conversión (25,41%)
+
+### 3. Seguimiento y Reportes
+- Historial por meses específicos
+- Visualización detallada de registros
+- Persistencia de datos entre sesiones
+
+
+---
+
+⭐ **¡Si te gusta este proyecto, dale una estrella!** ⭐
