@@ -34,23 +34,16 @@ export default function useDataBase() {
       INSERT OR IGNORE INTO mediosDePago (valor, nombre) VALUES (5, '100% Honorarios');
     `)
     dbRef.current = db
-    console.log("DB abierta")
   }
 
   async function saveData(ic, objetivoNum, monto, montoNum, medioPagoValue) {
     const db = dbRef.current
     if (!db) {
-      console.error("DB no inicializada")
       return
     }
 
     const cleanMonto = monto.replace(/\./g, "").replace(",", ".")
     const parsedMonto = Number.parseFloat(cleanMonto) || 0
-
-    console.log("Monto original:", monto)
-    console.log("Monto limpio:", cleanMonto)
-    console.log("Monto parseado:", parsedMonto)
-    console.log("MontoNum (calculado):", montoNum)
 
     const result = await db.runAsync(
       "INSERT INTO control (fecha, ic, objetivo, monto, montoReal, medioDePago) VALUES (date('now'), ?, ?, ?, ?, ?)",
@@ -60,13 +53,11 @@ export default function useDataBase() {
       montoNum,
       medioPagoValue,
     )
-    console.log("Resultado INSERT:", result)
   }
 
   async function verRegistros(filtroFecha = null, hasta = null) {
     const db = dbRef.current
     if (!db) {
-      console.error("DB no inicializada")
       return
     }
 
@@ -85,7 +76,6 @@ export default function useDataBase() {
     }
 
     const rows = await db.getAllAsync(query)
-    console.log("📋 Registros:", rows)
     return rows
   }
 

@@ -50,9 +50,7 @@ export default function App() {
       await AsyncStorage.setItem("objetivo", objetivoValue)
       await AsyncStorage.setItem("objetivoNum", objetivoNumValue.toString())
       await AsyncStorage.setItem("objetivoInicial", objetivoInicialValue.toString())
-      console.log("Objetivo guardado en AsyncStorage")
     } catch (error) {
-      console.error("Error guardando objetivo:", error)
     }
   }
 
@@ -68,10 +66,8 @@ export default function App() {
         setObjetivoInicial(Number.parseFloat(savedObjetivoInicial))
         setIsDisable(true)
         setObjetivoPuesto(false)
-        console.log("Objetivo cargado desde AsyncStorage:", savedObjetivo)
       }
     } catch (error) {
-      console.error("Error cargando objetivo:", error)
     }
   }
 
@@ -150,11 +146,6 @@ export default function App() {
 
     const cleanNumber = cleanEntero + cleanDecimal / 100
     const resultado = Number.parseFloat((cleanNumber * 0.2541).toFixed(2))
-
-    console.log("Monto visual:", visual)
-    console.log("Entero:", cleanEntero, "Decimal:", cleanDecimal)
-    console.log("Número limpio:", cleanNumber)
-    console.log("Resultado final:", resultado)
 
     setMonto(visual)
     setMontoNum(isNaN(resultado) ? 0 : resultado)
@@ -254,13 +245,11 @@ export default function App() {
                       Alert.alert("Objetivo", "Estas por modificar tu objetivo, ¿Estas segura?", [
                         {
                           text: "Cancelar",
-                          onPress: () => console.log("cancelado"),
                           style: "cancel",
                         },
                         {
                           text: "aceptar",
                           onPress: () => {
-                            console.log("modificado")
                             setObjetivoPuesto(true)
                             setIsDisable(false)
                           },
@@ -276,7 +265,6 @@ export default function App() {
                         setObjetivoInicial(objetivoNum)
                         saveObjetivoToStorage(objetivo, objetivoNum, objetivoNum)
 
-                        console.log("Objetivo reiniciado - Porcentaje vuelve a 0%")
                       }
                     }
                   }}
@@ -355,14 +343,6 @@ export default function App() {
                     if (hasError) {
                       Alert.alert("Faltan cosas", "Rellena todos los campos", [{ text: "Aceptar" }])
                     } else {
-                      console.log("Guardando datos:", {
-                        ic,
-                        objetivoNum,
-                        monto,
-                        montoNum,
-                        medioPago: medioPago.value,
-                      })
-
                       saveData(ic, objetivoNum, monto, montoNum, medioPago.value)
                       Alert.alert("Éxito", "Guardado con éxito", [{ text: "Aceptar" }])
 

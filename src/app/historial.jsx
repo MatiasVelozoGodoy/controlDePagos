@@ -11,7 +11,6 @@ const historial = () => {
       const fetchedData = await verRegistros(startDate, endDate)
       router.push({ pathname: "/datos", params: { data: JSON.stringify(fetchedData) } })
     } catch (error) {
-      console.error("Error al obtener registros:", error)
       alert("Error al cargar los registros. Inténtalo de nuevo.")
     }
   }
